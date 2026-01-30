@@ -1,0 +1,46 @@
+.toggle-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 8px 0;
+}
+
+.toggle-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  flex: 1;
+}
+
+.toggle-btn {
+  width: 56px;
+  height: 56px;
+  border: 3px solid #d1d5db;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: 700;
+  color: transparent;
+  transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+  border-color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.toggle-btn.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.toggle-btn.active:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}

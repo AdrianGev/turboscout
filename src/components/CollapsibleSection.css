@@ -1,0 +1,47 @@
+.collapsible-section {
+  margin-bottom: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.section-header {
+  background: #f8fafc;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s;
+}
+
+.section-header:hover {
+  background: #f1f5f9;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.chevron {
+  font-size: 12px;
+  color: #64748b;
+  transition: transform 0.2s;
+}
+
+.chevron.collapsed {
+  transform: rotate(-90deg);
+}
+
+.chevron.expanded {
+  transform: rotate(0deg);
+}
+
+.section-content {
+  padding: 16px;
+  background: white;
+}

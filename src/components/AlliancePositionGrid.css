@@ -1,0 +1,60 @@
+.alliance-position-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding: 24px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+}
+
+.alliance-group {
+  text-align: center;
+}
+
+.alliance-header {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.alliance-header.blue {
+  color: #1d4ed8;
+}
+
+.alliance-header.red {
+  color: #dc2626;
+}
+
+.position-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.position-btn {
+  width: 120px;
+  height: 60px;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #4b5563;
+  background: #f3f4f6;
+}
+
+.position-btn:hover {
+  background: #f3f4f6;
+  border-color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.position-btn.selected {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+  transform: scale(1.1);
+}

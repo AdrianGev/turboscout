@@ -1,0 +1,82 @@
+.big-stepper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 16px;
+}
+
+.big-stepper-label {
+  font-size: 20px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.big-stepper-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.big-stepper-controls {
+  display: flex;
+  gap: 16px;
+}
+
+.big-stepper-btn {
+  width: 240px;
+  height: 100px;
+  border: 3px solid #d1d5db;
+  background: white;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 24px;
+  color: #374151;
+  transition: all 0.2s;
+}
+
+.big-stepper-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.big-stepper-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.big-stepper-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.big-stepper-btn.minus {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+.big-stepper-btn.minus:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.big-stepper-btn.plus {
+  background: #f0f9ff;
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+
+.big-stepper-btn.plus:hover:not(:disabled) {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}

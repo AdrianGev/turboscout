@@ -1,0 +1,51 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 50%, #2563eb 100%);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
+}
+
+.main-content {
+  padding-top: 0;
+}
+
+.settings-page {
+  padding: 16px;
+  min-height: calc(100vh - 72px);
+}
+
+.settings-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.settings-card h2 {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.settings-card p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
