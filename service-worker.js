@@ -1,42 +1,35 @@
 const CACHE_PREFIX = "turboscout-cache";
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v4";
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
 
-const MANIFEST_URL = "./asset-manifest.json";
+const MANIFEST_URL = "asset-manifest.json";
+
+function abs(path) {
+  return new URL(path, self.registration.scope).toString();
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      await cache.addAll([abs("./"), abs("./index.html"), abs(`./${MANIFEST_URL}`)]);
+
       try {
-        const cache = await caches.open(CACHE_NAME);
-
-        await cache.add(MANIFEST_URL);
-
-        const res = await fetch(MANIFEST_URL, { cache: "no-store" });
+        const res = await fetch(abs(`./${MANIFEST_URL}`), { cache: "no-store" });
         const manifest = await res.json();
 
-        const filesObj = manifest.files || {};
+        const files = Object.values(manifest.files || {});
         const entrypoints = manifest.entrypoints || [];
+        const urlsToCache = [...new Set([...files, ...entrypoints])]
+          .filter(Boolean)
+          .map((u) => new URL(u, self.location.origin).toString());
 
-        const urlsToCache = new Set();
-
-        urlsToCache.add("./");
-        urlsToCache.add("./index.html");
-
-        for (const key of Object.keys(filesObj)) {
-          const url = filesObj[key];
-          if (typeof url === "string") urlsToCache.add("." + url);
-        }
-
-        for (const url of entrypoints) {
-          if (typeof url === "string") urlsToCache.add("." + url);
-        }
-
-        await cache.addAll(Array.from(urlsToCache));
-
-        await self.skipWaiting();
+        await cache.addAll(urlsToCache);
       } catch (e) {
       }
+
+      await self.skipWaiting();
     })()
   );
 });
@@ -46,10 +39,8 @@ self.addEventListener("activate", (event) => {
     (async () => {
       const keys = await caches.keys();
       await Promise.all(
-        keys.map((key) => {
-          if (key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
+        keys.map((k) => {
+          if (k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME) return caches.delete(k);
         })
       );
       await self.clients.claim();
@@ -63,28 +54,27 @@ self.addEventListener("fetch", (event) => {
 
   if (url.origin !== self.location.origin) return;
 
-  if (req.mode === "navigate") {
-    event.respondWith(
-      (async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cachedIndex = await cache.match("./index.html");
-        if (cachedIndex) return cachedIndex;
-
-        return fetch(req);
-      })()
-    );
-    return;
-  }
-
   event.respondWith(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
+
+      if (req.mode === "navigate") {
+        const cachedIndex = await cache.match(abs("./index.html"));
+        if (cachedIndex) return cachedIndex;
+
+        try {
+          return await fetch(req);
+        } catch (e) {
+          return (await cache.match(abs("./index.html"))) || new Response("Offline", { status: 503 });
+        }
+      }
+
       const cached = await cache.match(req);
       if (cached) return cached;
-//fallback to network
+
       try {
         const fresh = await fetch(req);
-        if (req.method === "GET" && fresh && fresh.ok) {
+        if (fresh && fresh.ok && req.method === "GET") {
           cache.put(req, fresh.clone());
         }
         return fresh;
