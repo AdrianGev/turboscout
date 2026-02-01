@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { registerSW } from './sw';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,3 +13,5 @@ root.render(
 );
 
 reportWebVitals();
+
+registerSW();

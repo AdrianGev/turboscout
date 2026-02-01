@@ -606,6 +606,10 @@ const Scout = () => {
           </div>
         </div>
       )}
+      
+      <div className="version-info">
+        <span className="version-text">v0.1.0 | Cache: v1</span>
+      </div>
     </div>
   );
 };
