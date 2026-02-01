@@ -22,7 +22,7 @@ const Scout = () => {
       fuel: 0,
       climb: 'No Climb',
       wonAuto: false,
-      transitionShift: ''
+      transitionShift: []
     },
     teleop: {
       shift1: { fuel: 0, defense: 0, defenseTags: [] },
@@ -209,7 +209,7 @@ const Scout = () => {
       auto_fuel: data.auto.fuel,
       auto_climb: data.auto.climb,
       auto_won: data.auto.wonAuto ? 'Y' : 'N',
-      auto_transition: data.auto.transitionShift,
+      auto_transition: data.auto.transitionShift.join(','),
       shift1_fuel: data.teleop.shift1.fuel,
       shift1_defense: data.teleop.shift1.defense,
       shift1_defense_tags: data.teleop.shift1.defenseTags.join(','),
@@ -285,7 +285,7 @@ const Scout = () => {
       match: prev.match + 1,
       team: '',
       position: null,
-      auto: { fuel: 0, climb: 'No Climb', wonAuto: false, transitionShift: '' },
+      auto: { fuel: 0, climb: 'No Climb', wonAuto: false, transitionShift: [] },
       teleop: {
         shift1: { fuel: 0, defense: 0, defenseTags: [] },
         shift2: { fuel: 0, defense: 0, defenseTags: [] },
@@ -322,7 +322,15 @@ const Scout = () => {
                 >
                   -
                 </button>
-                <span className="match-value">{formData.match}</span>
+                <input
+                  type="text"
+                  value={formData.match}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value.replace(/\D/g, '')) || 1;
+                    handleInputChange('match', Math.max(1, value));
+                  }}
+                  className="match-input"
+                />
                 <button 
                   onClick={() => handleInputChange('match', formData.match + 1)}
                   className="stepper-btn"
@@ -341,7 +349,7 @@ const Scout = () => {
                   handleInputChange('team', value);
                 }}
                 className="team-input"
-                placeholder="1234"
+                placeholder="12345"
                 maxLength={5}
               />
             </div>
@@ -354,7 +362,15 @@ const Scout = () => {
                 >
                   -
                 </button>
-                <span className="match-value">{formData.increment}</span>
+                <input
+                  type="text"
+                  value={formData.increment}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value.replace(/\D/g, '')) || 1;
+                    handleInputChange('increment', Math.max(1, value));
+                  }}
+                  className="match-input"
+                />
                 <button 
                   onClick={() => handleInputChange('increment', formData.increment + 1)}
                   className="stepper-btn"
@@ -403,12 +419,23 @@ const Scout = () => {
               </div>
               <div className="transition-shift">
                 <label>Transition Shift</label>
-                <textarea
-                  value={formData.auto.transitionShift}
-                  onChange={(e) => handleNestedChange('auto', 'transitionShift', e.target.value)}
-                  placeholder="What did the robot do in transition shift?"
-                  className="transition-textarea"
-                />
+                <div className="transition-keywords-grid">
+                  {['Hoarding', 'Scoring', 'Defense Prep', 'Other'].map((keyword) => (
+                    <button
+                      key={keyword}
+                      className={`transition-keyword-btn ${formData.auto.transitionShift.includes(keyword) ? 'selected' : ''}`}
+                      onClick={() => {
+                        const currentKeywords = formData.auto.transitionShift;
+                        const newKeywords = currentKeywords.includes(keyword)
+                          ? currentKeywords.filter(k => k !== keyword)
+                          : [...currentKeywords, keyword];
+                        handleNestedChange('auto', 'transitionShift', newKeywords);
+                      }}
+                    >
+                      {keyword}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
