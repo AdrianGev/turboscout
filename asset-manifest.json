@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/TurboScout/static/css/main.585161c0.css",
-    "main.js": "/TurboScout/static/js/main.e8da462f.js",
-    "static/js/453.924c9b21.chunk.js": "/TurboScout/static/js/453.924c9b21.chunk.js",
-    "index.html": "/TurboScout/index.html",
-    "main.585161c0.css.map": "/TurboScout/static/css/main.585161c0.css.map",
-    "main.e8da462f.js.map": "/TurboScout/static/js/main.e8da462f.js.map",
-    "453.924c9b21.chunk.js.map": "/TurboScout/static/js/453.924c9b21.chunk.js.map"
+    "main.css": "/turboscout/static/css/main.585161c0.css",
+    "main.js": "/turboscout/static/js/main.25322286.js",
+    "static/js/453.924c9b21.chunk.js": "/turboscout/static/js/453.924c9b21.chunk.js",
+    "index.html": "/turboscout/index.html",
+    "main.585161c0.css.map": "/turboscout/static/css/main.585161c0.css.map",
+    "main.25322286.js.map": "/turboscout/static/js/main.25322286.js.map",
+    "453.924c9b21.chunk.js.map": "/turboscout/static/js/453.924c9b21.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.585161c0.css",
-    "static/js/main.e8da462f.js"
+    "static/js/main.25322286.js"
   ]
 }

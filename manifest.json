@@ -1,6 +1,6 @@
 {
-  "short_name": "TurboScout",
-  "name": "TurboScout - Robotics Scouting App",
+  "short_name": "turboscout",
+  "name": "turboscout - Robotics Scouting App",
   "icons": [
     {
       "src": "favicon-32x32.png",
