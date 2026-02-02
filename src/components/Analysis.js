@@ -12,7 +12,6 @@ const Analysis = () => {
   const [picklist, setPicklist] = useState([]);
   const [refreshTimer, setRefreshTimer] = useState(null);
 
-  // Load saved CSV URL from localStorage on mount
   useEffect(() => {
     const savedUrl = localStorage.getItem('turboscout-csv-url');
     if (savedUrl) {
@@ -22,12 +21,10 @@ const Analysis = () => {
     }
   }, []);
 
-  // Parse CSV data and calculate stats
   const parseCSVData = (csvText) => {
     const lines = csvText.trim().split('\n');
     if (lines.length < 2) return [];
 
-    // Proper CSV parsing that handles quoted fields
     const parseCSVLine = (line) => {
       const result = [];
       let current = '';
@@ -63,21 +60,19 @@ const Analysis = () => {
 
     console.log('First row data:', rows[0]);
 
-    // Debug: Show all available columns
+    // console debug
     console.log('Available columns:', Object.keys(rows[0] || {}));
     
-    // Group by team and calculate stats
     const teamData = {};
     rows.forEach((row, index) => {
       const team = row['Team'];
       
-      // Try different possible column names and log what we find
       const totalScore = parseFloat(row['Total Score'] || row['total_score'] || row['Total_Score'] || 0);
       const autoScore = parseFloat(row['Auto Pts'] || row['auto_pts'] || row['Auto_Pts'] || 0);
       const teleScore = parseFloat(row['Teleop Pts'] || row['teleop_pts'] || row['Teleop_Pts'] || 0);
       const endgameScore = parseFloat(row['Endgame Pts'] || row['endgame_pts'] || row['Endgame_Pts'] || 0);
       
-      if (index < 3) { // Only log first 3 rows to avoid spam
+      if (index < 3) {
         console.log(`Row ${index} - Team ${team}:`);
         console.log('  Raw row data:', row);
         console.log(`  Parsed - Total=${totalScore}, Auto=${autoScore}, Tele=${teleScore}, End=${endgameScore}`);
@@ -103,7 +98,6 @@ const Analysis = () => {
       teamData[team].endgameScores.push(endgameScore);
     });
 
-    // Calculate statistics for each team
     const stats = Object.values(teamData).map(team => {
       const totalScores = team.totalScores.filter(s => !isNaN(s) && s >= 0);
       const autoScores = team.autoScores.filter(s => !isNaN(s) && s >= 0);
@@ -131,11 +125,9 @@ const Analysis = () => {
       };
     });
 
-    // Sort by average total score descending
     return stats.sort((a, b) => b.avgTotal - a.avgTotal);
   };
 
-  // Fetch and parse CSV data
   const fetchAndParseData = useCallback(async (url) => {
     if (!url) {
       console.log('No URL provided to fetchAndParseData');
@@ -175,7 +167,6 @@ const Analysis = () => {
     }
   }, []);
 
-  // Connect to CSV URL
   const handleConnect = () => {
     if (!csvUrl.trim()) {
       setError('Please enter a CSV URL');
@@ -187,14 +178,12 @@ const Analysis = () => {
     fetchAndParseData(csvUrl);
   };
 
-  // Refresh data
   const handleRefresh = () => {
     if (csvUrl) {
       fetchAndParseData(csvUrl);
     }
   };
 
-  // Disconnect
   const handleDisconnect = () => {
     localStorage.removeItem('turboscout-csv-url');
     setCsvUrl('');
@@ -204,7 +193,6 @@ const Analysis = () => {
     setError('');
   };
 
-  // Toggle team in picklist
   const togglePicklist = (team) => {
     setPicklist(prev => {
       if (prev.includes(team)) {
@@ -215,7 +203,6 @@ const Analysis = () => {
     });
   };
 
-  // Format time
   const formatTime = (date) => {
     if (!date) return '';
     return date.toLocaleTimeString('en-US', { 
@@ -234,7 +221,7 @@ const Analysis = () => {
             <div className="connection-status">
               <span className="status-indicator connected">Sheet connected!</span>
               {lastUpdated && (
-                <span className="last-updated">Last updated {formatTime(lastUpdated)}</span>
+                <span className="last-updated">Last updated {formatTime(lastUpdated)} (may take ~1 min to update)</span>
               )}
               <button className="refresh-btn" onClick={handleRefresh} disabled={isLoading}>
                 {isLoading ? 'Loading...' : 'Refresh'}
@@ -268,10 +255,8 @@ const Analysis = () => {
           </div>
         )}
 
-        {/* Main Content */}
         {isConnected && teamStats.length > 0 ? (
           <div className="analysis-content">
-            {/* Leaderboard Table */}
             <div className="leaderboard-section">
               <h3>Team Leaderboard</h3>
               <div className="table-container">
@@ -319,7 +304,6 @@ const Analysis = () => {
               </div>
             </div>
 
-            {/* Picklist Section */}
             {picklist.length > 0 && (
               <div className="picklist-section">
                 <h3>Picklist ({picklist.length} teams)</h3>
@@ -353,7 +337,6 @@ const Analysis = () => {
         )}
       </div>
 
-      {/* Help Modal */}
       {showHelpModal && (
         <div className="help-modal-overlay" onClick={() => setShowHelpModal(false)}>
           <div className="help-modal" onClick={(e) => e.stopPropagation()}>
