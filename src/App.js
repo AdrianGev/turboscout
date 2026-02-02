@@ -25,7 +25,7 @@ function App() {
           <div className="settings-page">
             <div className="settings-card">
               <h2>Settings</h2>
-              <p>Settings panel coming soon lol</p>
+              <p>Settings panel coming soon...</p>
             </div>
           </div>
         );
