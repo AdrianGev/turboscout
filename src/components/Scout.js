@@ -110,7 +110,7 @@ const Scout = () => {
   };
 
   const defenseTags = ['Aggressive', 'Smart driver', 'Feeds', 'Protected', 'Disruptive'];
-  const keywordOptions = ['Aggressive', 'High-scorer', 'Defensive', 'Feeder', 'Bump', 'Fast', 'Accurate', 'Cooperative'];
+  const keywordOptions = ['Aggressive', 'High-scorer', 'Defensive', 'Hoarder', 'Bump', 'Fast', 'Accurate', 'Cooperative'];
 
   const FIELDS = [
     'match',
