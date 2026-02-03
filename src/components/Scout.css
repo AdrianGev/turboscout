@@ -287,7 +287,7 @@
 }
 
 .score-text {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   color: #1f2937;
   text-align: center;
@@ -757,6 +757,482 @@
   .qr-modal {
     width: 95%;
     margin: 20px;
+  }
+}
+
+/* Very Small Screen Fixes (Kindle, etc.) */
+@media (max-width: 800px) and (max-height: 1300px) {
+  .scout-page {
+    padding: 4px;
+  }
+  
+  .scout-card {
+    padding: 8px;
+    margin: 0;
+  }
+  
+  /* Force auto section to stack vertically */
+  .section-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  
+  .section-left,
+  .section-right {
+    width: 100%;
+    padding: 0;
+  }
+  
+  /* Stack everything vertically in auto section */
+  .auto-section .section-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .section-left {
+    order: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .section-right {
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  /* BigStepper adjustments for very small screens */
+  .big-stepper {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .big-stepper-btn {
+    min-width: 240px;
+    max-width: 300px;
+    font-size: 24px;
+    padding: 12px 8px;
+    height: 100px;
+  }
+  
+  .big-stepper-label {
+    font-size: 24px;
+  }
+  
+  .big-stepper-value {
+    font-size: 30px;
+    min-width: 50px;
+  }
+  
+  /* Climb and Won Auto - stack vertically */
+  .climb-won-auto-row {
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+    align-items: center;
+  }
+  
+  .climb-section,
+  .won-auto-section {
+    width: 100%;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Transition keywords - 2x2 grid */
+  .transition-shift {
+    padding: 0;
+    text-align: center;
+  }
+  
+  .transition-keywords-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    max-width: 400px;
+    margin: 0 auto;
+    justify-items: center;
+  }
+  
+  .transition-keyword-btn {
+    width: 100%;
+    max-width: 180px;
+    padding: 8px 6px;
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  /* Endgame adjustments */
+  .endgame-toggle-btn {
+    min-width: 88px;
+    max-width: 125px;
+    font-size: 15px;
+    padding: 10px 8px;
+  }
+  
+  /* Keywords section centering */
+  .keywords-section {
+    text-align: center;
+    padding: 0 20px;
+  }
+  
+  .keywords-section .chip-select {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 100%;
+  }
+  
+  /* Score text smaller */
+  .score-text {
+    font-size: 14px;
+  }
+  
+  /* Alliance Position Grid Fixes for Kindle */
+  .alliance-position-grid {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .alliance-group {
+    text-align: center;
+  }
+  
+  .position-buttons {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+  
+  .position-btn {
+    width: auto;
+    min-width: 60px;
+    max-width: 80px;
+    height: 45px;
+    font-size: 14px;
+    flex: 1;
+    padding: 8px 4px;
+  }
+  
+  .alliance-header {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  
+  /* QR Modal Fixes for Kindle */
+  .qr-modal {
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    margin: 20px;
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+  }
+  
+  .qr-modal-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+}
+
+/* Mobile Portrait Mode Fixes */
+/* iPhone QR Modal Fixes */
+@media (max-width: 430px) {
+  .qr-modal {
+    width: 85%;
+    max-width: 350px;
+    max-height: 85vh;
+    margin: 10px auto;
+    transform: scale(0.9) translateX(-5%);
+    transform-origin: center;
+    position: relative;
+    left: 0;
+    right: 0;
+  }
+  
+  .qr-modal-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .qr-modal-content {
+    padding: 16px;
+  }
+  
+  .qr-modal-header {
+    padding: 12px 16px;
+  }
+  
+  .qr-modal-header h2 {
+    font-size: 18px;
+  }
+  
+  .qr-code-image {
+    max-width: 90%;
+    height: auto;
+  }
+  
+  /* BigStepper iPhone Fixes */
+  .big-stepper-btn {
+    font-size: 21px;
+  }
+  
+  .big-stepper-label {
+    font-size: 24px;
+  }
+  
+  .big-stepper-value {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 480px) and (orientation: portrait) {
+  .scout-page {
+    padding: 6px;
+  }
+  
+  .scout-card {
+    padding: 12px;
+    margin: 0;
+  }
+  
+  /* Auto Section Fixes */
+  .section-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .section-left {
+    display: flex;
+    justify-content: center;
+    padding: 0 8px;
+  }
+  
+  /* BigStepper Mobile Fixes */
+  .big-stepper {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .big-stepper-controls {
+    gap: 4px;
+  }
+  
+  .big-stepper-btn {
+    min-width: 120px;
+    max-width: 160px;
+    padding: 8px 4px;
+    font-size: 14px;
+    flex: 1;
+  }
+  
+  .big-stepper-value {
+    font-size: 20px;
+    min-width: 40px;
+  }
+  
+  .climb-won-auto-row {
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 8px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .climb-section,
+  .won-auto-section {
+    max-width: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Transition Shift Buttons Fix */
+  .transition-shift {
+    padding: 0 8px;
+    text-align: center;
+  }
+  
+  .transition-keywords-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 100%;
+    align-items: center;
+  }
+  
+  .transition-keyword-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+    max-width: 200px;
+    text-align: center;
+  }
+  
+  /* Teleop Section Fixes */
+  .shift-content {
+    padding: 8px;
+  }
+  
+  .shift-content-wrapper {
+    min-height: 80px;
+    padding: 0 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Endgame Section Fixes */
+  .endgame-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    padding: 0 8px;
+  }
+  
+  .endgame-climb-column {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .endgame-climb-column .chip-select {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  
+  .endgame-climb-column .chip-select .chip {
+    font-size: 12px;
+    padding: 6px 10px;
+    min-width: 60px;
+  }
+  
+  .endgame-climb-levels {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .climb-level-toggles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    justify-items: center;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  
+  .climb-level-toggles .endgame-toggle-btn:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  
+  .climb-level-toggles .endgame-toggle-btn:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  
+  .climb-level-toggles .endgame-toggle-btn:nth-child(3) {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    width: 50%;
+    justify-self: center;
+  }
+  
+  .endgame-toggles {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 100%;
+  }
+  
+  .endgame-toggle-btn {
+    min-width: 80px;
+    max-width: 120px;
+    flex: 1;
+    font-size: 14px;
+    padding: 10px 8px;
+  }
+  
+  /* Score Section Mobile Fix */
+  .score-breakdown {
+    flex-direction: column;
+    gap: 1px;
+  }
+  
+  .score-category {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 16px;
+  }
+  
+  .score-category:first-child {
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .score-category:last-child {
+    border-radius: 0 0 12px 12px;
+    border-bottom: none;
+  }
+  
+  .score-text {
+    font-size: 16px;
+  }
+  
+  /* Header adjustments */
+  .scout-header-row {
+    padding: 12px;
+  }
+  
+  .input-group {
+    min-width: 0;
+    flex: 1;
+  }
+  
+  .initials-input,
+  .team-input {
+    width: 100%;
+    min-width: 80px;
+    max-width: 120px;
+  }
+  
+  .match-stepper {
+    gap: 4px;
+  }
+  
+  .stepper-btn {
+    width: 40px;
+    height: 36px;
+    font-size: 16px;
+  }
+  
+  .match-input {
+    width: 50px;
+    padding: 6px;
   }
 }
 
