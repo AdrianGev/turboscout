@@ -91,7 +91,6 @@
   font-weight: 500;
 }
 
-/* iPhone Navbar Fixes */
 @media (max-width: 430px) {
   .nav-container {
     height: auto;
@@ -134,4 +133,36 @@
   .logo-icon {
     font-size: 18px;
   }
+}
+
+body.dark-mode .nav-container {
+  background: #1e293b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .logo-icon {
+  color: #60a5fa;
+}
+
+body.dark-mode .wordmark {
+  color: #60a5fa;
+}
+
+body.dark-mode .nav-tab {
+  color: #94a3b8;
+}
+
+body.dark-mode .nav-tab:hover {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+body.dark-mode .nav-tab.active {
+  background: #3b82f6;
+  color: white;
+}
+
+body.dark-mode .scout-pill {
+  background: #334155;
+  color: #94a3b8;
 }

@@ -77,6 +77,8 @@
     height: 50px;
     font-size: 16px;
     max-width: 80px;
+    min-width: 60px;
+    padding: 6px 8px;
   }
 }
 
@@ -98,4 +100,39 @@
   .alliance-header {
     font-size: 18px;
   }
+}
+
+body.dark-mode .alliance-position-grid {
+  background: #334155;
+  border-color: #64748b;
+}
+
+body.dark-mode .position-btn {
+  background: #475569;
+  border-color: #64748b;
+  color: #94a3b8;
+}
+
+body.dark-mode .position-btn:hover {
+  background: #334155;
+  border-color: #3b82f6;
+  color: #f1f5f9;
+}
+
+body.dark-mode .position-btn.selected {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+body.dark-mode .alliance-header {
+  color: #f1f5f9;
+}
+
+body.dark-mode .alliance-header.blue {
+  color: #60a5fa;
+}
+
+body.dark-mode .alliance-header.red {
+  color: #f87171;
 }

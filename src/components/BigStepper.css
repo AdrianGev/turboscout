@@ -80,3 +80,47 @@
   background: #dbeafe;
   border-color: #3b82f6;
 }
+
+body.dark-mode .big-stepper-label {
+  color: #f1f5f9;
+}
+
+body.dark-mode .big-stepper-value {
+  color: #f1f5f9;
+}
+
+body.dark-mode .big-stepper-btn {
+  background: #475569;
+  border-color: #64748b;
+  color: #94a3b8;
+}
+
+body.dark-mode .big-stepper-btn:hover:not(:disabled) {
+  background: #334155;
+  border-color: #3b82f6;
+  color: #f1f5f9;
+}
+
+body.dark-mode .big-stepper-btn.minus {
+  background: #7f1d1d;
+  border-color: #991b1b;
+  color: #fca5a5;
+}
+
+body.dark-mode .big-stepper-btn.minus:hover:not(:disabled) {
+  background: #991b1b;
+  border-color: #dc2626;
+  color: #fecaca;
+}
+
+body.dark-mode .big-stepper-btn.plus {
+  background: #1e3a8a;
+  border-color: #1d4ed8;
+  color: #93c5fd;
+}
+
+body.dark-mode .big-stepper-btn.plus:hover:not(:disabled) {
+  background: #1d4ed8;
+  border-color: #2563eb;
+  color: #dbeafe;
+}

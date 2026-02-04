@@ -11,6 +11,7 @@ const Scout = () => {
   const [showQRModal, setShowQRModal] = useState(false);
   const [qrCodeDataURL, setQrCodeDataURL] = useState('');
   const [qrCodeMode, setQrCodeMode] = useState('data');
+  const [showClearModal, setShowClearModal] = useState(false);
   const [formData, setFormData] = useState({
     initials: '',
     match: 1,
@@ -276,11 +277,14 @@ const Scout = () => {
   };
 
   const handleClear = () => {
+    setShowClearModal(true);
+  };
+
+  const handleConfirmClear = () => {
     setFormData(prev => ({
       ...prev,
       match: prev.match + 1,
       team: '',
-      position: null,
       auto: { fuel: 0, climb: 'No Climb', wonAuto: false, transitionShift: [] },
       teleop: {
         shift1: { fuel: 0, defense: 0, defenseTags: [] },
@@ -291,6 +295,11 @@ const Scout = () => {
       endgame: { climb: 'None', climbLevel: 'None', canDescend: false, died: false },
       keywords: []
     }));
+    setShowClearModal(false);
+  };
+
+  const handleCancelClear = () => {
+    setShowClearModal(false);
   };
 
   return (
@@ -633,6 +642,27 @@ const Scout = () => {
       <div className="version-info">
         <span className="version-text">v0.1.0 | Cache: v4</span>
       </div>
+
+      {showClearModal && (
+        <div className="qr-modal-overlay" onClick={handleCancelClear}>
+          <div className="clear-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="clear-modal-header">
+              <h2>Confirm Clear</h2>
+            </div>
+            <div className="clear-modal-content">
+              <p>Are you sure you want to clear all data?</p>
+            </div>
+            <div className="clear-modal-actions">
+              <button className="btn secondary" onClick={handleCancelClear}>
+                Cancel
+              </button>
+              <button className="btn primary" onClick={handleConfirmClear}>
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

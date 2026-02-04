@@ -3,6 +3,7 @@ import TopNav from './components/TopNav';
 import Home from './components/Home';
 import Scout from './components/Scout';
 import Analysis from './components/Analysis';
+import Settings from './components/Settings';
 import './App.css';
 
 function App() {
@@ -21,14 +22,7 @@ function App() {
       case 'Analysis':
         return <Analysis />;
       case 'Settings':
-        return (
-          <div className="settings-page">
-            <div className="settings-card">
-              <h2>Settings</h2>
-              <p>Settings panel coming soon...</p>
-            </div>
-          </div>
-        );
+        return <Settings />;
       default:
         return <Home onNavigate={setActiveTab} />;
     }

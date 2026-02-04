@@ -22,30 +22,3 @@ body {
 .main-content {
   padding-top: 0;
 }
-
-.settings-page {
-  padding: 16px;
-  min-height: calc(100vh - 72px);
-}
-
-.settings-card {
-  max-width: 1000px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.settings-card h2 {
-  margin: 0 0 16px 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: #1e293b;
-}
-
-.settings-card p {
-  color: #64748b;
-  font-size: 14px;
-  margin: 0;
-}

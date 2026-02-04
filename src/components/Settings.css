@@ -1,0 +1,159 @@
+.settings-page {
+  padding: 24px;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.settings-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  max-width: 800px;
+  width: 100%;
+}
+
+.settings-card h2 {
+  margin: 0 0 32px 0;
+  font-size: 32px;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+}
+
+.settings-section {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.setting-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.setting-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.setting-control {
+  flex-shrink: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: 0.3s;
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .toggle-slider {
+  background-color: #3b82f6;
+}
+
+input:focus + .toggle-slider {
+  box-shadow: 0 0 1px #3b82f6;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+body.dark-mode {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+}
+
+body.dark-mode .settings-card {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+body.dark-mode .settings-card h2 {
+  color: #f1f5f9;
+}
+
+body.dark-mode .setting-info h3 {
+  color: #f1f5f9;
+}
+
+body.dark-mode .setting-info p {
+  color: #94a3b8;
+}
+
+body.dark-mode .settings-section {
+  border-bottom-color: #475569;
+}
+
+@media (max-width: 430px) {
+  .settings-page {
+    padding: 16px;
+  }
+  
+  .settings-card {
+    padding: 24px;
+  }
+  
+  .settings-card h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .setting-control {
+    align-self: flex-end;
+  }
+}

@@ -43,3 +43,25 @@
   color: white;
   transform: scale(1.1);
 }
+
+body.dark-mode .chip-label {
+  color: #f1f5f9;
+}
+
+body.dark-mode .chip {
+  background: #475569;
+  border-color: #64748b;
+  color: #94a3b8;
+}
+
+body.dark-mode .chip:hover {
+  background: #334155;
+  border-color: #3b82f6;
+  color: #f1f5f9;
+}
+
+body.dark-mode .chip.selected {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}

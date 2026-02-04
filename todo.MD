@@ -12,11 +12,8 @@
 
 ## Scout Page
 
-- Uncap fuel counter from 100 -> 1000
 - Improve mobile compatibility
   - Team selection going off-screen, detect when this happens and adjust the CSS to make it fit
-- Improve playstyle labels (more in-depth keywords than exist)
-  - Agressive, high-scorer, defensive, feeder, uses bump, very fast
 
 ---
 

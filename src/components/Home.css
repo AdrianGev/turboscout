@@ -110,7 +110,6 @@
   box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
 }
 
-/* iPhone Homepage Fixes */
 @media (max-width: 430px) {
   .home-page {
     padding: 16px;
@@ -160,4 +159,49 @@
     font-size: 16px;
     min-height: 48px;
   }
+}
+
+body.dark-mode .island-card {
+  background: #1e293b;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .island-header h2 {
+  color: #f1f5f9;
+}
+
+body.dark-mode .island-subtitle {
+  color: #94a3b8;
+}
+
+body.dark-mode .status-chip {
+  background: #334155;
+  color: #94a3b8;
+}
+
+body.dark-mode .island-tile {
+  background: #334155;
+  border-color: #475569;
+}
+
+body.dark-mode .island-tile:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.2);
+}
+
+body.dark-mode .tile-title {
+  color: #f1f5f9;
+}
+
+body.dark-mode .tile-subtitle {
+  color: #94a3b8;
+}
+
+body.dark-mode .tile-button.primary {
+  background: #3b82f6;
+  color: white;
+}
+
+body.dark-mode .tile-button.primary:hover {
+  background: #2563eb;
 }
