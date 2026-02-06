@@ -563,7 +563,6 @@ const Analysis = () => {
   return (
     <div className="analysis-page">
       <div className="analysis-card">
-        {/* Connection Bar */}
         <div className="connection-bar">
           {isConnected ? (
             <div className="connection-status">

@@ -562,7 +562,6 @@ body.dark-mode .sortable:hover {
   background: rgba(59, 130, 246, 0.2);
 }
 
-/* Chart Islands Styling */
 .charts-section {
   margin-top: 32px;
 }
@@ -596,7 +595,6 @@ body.dark-mode .sortable:hover {
   width: 100%;
 }
 
-/* Dark mode chart islands */
 body.dark-mode .chart-island {
   background: #1e293b;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -606,7 +604,6 @@ body.dark-mode .chart-island h3 {
   color: #f1f5f9;
 }
 
-/* Responsive chart layout */
 @media (max-width: 1200px) {
   .chart-row {
     flex-direction: column;
