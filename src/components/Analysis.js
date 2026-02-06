@@ -1,5 +1,28 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
 import './Analysis.css';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Analysis = () => {
   const [csvUrl, setCsvUrl] = useState('');
@@ -11,6 +34,7 @@ const Analysis = () => {
   const [teamStats, setTeamStats] = useState([]);
   const [picklist, setPicklist] = useState([]);
   const [refreshTimer, setRefreshTimer] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: 'avgTotal', direction: 'desc' });
 
   useEffect(() => {
     const savedUrl = localStorage.getItem('turboscout-csv-url');
@@ -23,7 +47,7 @@ const Analysis = () => {
 
   const parseCSVData = (csvText) => {
     const lines = csvText.trim().split('\n');
-    if (lines.length < 2) return [];
+    if (lines.length < 2) return { stats: [], rawTeamData: {} };
 
     const parseCSVLine = (line) => {
       const result = [];
@@ -58,26 +82,20 @@ const Analysis = () => {
       return row;
     });
 
-    console.log('First row data:', rows[0]);
-
-    // console debug
-    console.log('Available columns:', Object.keys(rows[0] || {}));
-    
     const teamData = {};
     rows.forEach((row, index) => {
       const team = row['Team'];
+      const matchNum = parseFloat(row['Match'] || row['match'] || index + 1);
       
       const totalScore = parseFloat(row['Total Score'] || row['total_score'] || row['Total_Score'] || 0);
       const autoScore = parseFloat(row['Auto Pts'] || row['auto_pts'] || row['Auto_Pts'] || 0);
       const teleScore = parseFloat(row['Teleop Pts'] || row['teleop_pts'] || row['Teleop_Pts'] || 0);
       const endgameScore = parseFloat(row['Endgame Pts'] || row['endgame_pts'] || row['Endgame_Pts'] || 0);
       
-      if (index < 3) {
-        console.log(`Row ${index} - Team ${team}:`);
-        console.log('  Raw row data:', row);
-        console.log(`  Parsed - Total=${totalScore}, Auto=${autoScore}, Tele=${teleScore}, End=${endgameScore}`);
-      }
-
+      const climbSuccess = (row['Endgame Climb'] || row['endgame_climb'] || '').toLowerCase().includes('success');
+      const died = (row['Endgame Died'] || row['endgame_died'] || '').toLowerCase() === 'y';
+      const autoWon = (row['Auto Won'] || row['auto_won'] || '').toLowerCase() === 'y';
+      
       if (!team) return;
 
       if (!teamData[team]) {
@@ -87,7 +105,11 @@ const Analysis = () => {
           totalScores: [],
           autoScores: [],
           teleScores: [],
-          endgameScores: []
+          endgameScores: [],
+          matchNumbers: [],
+          climbSuccesses: [],
+          deaths: [],
+          autoWins: []
         };
       }
 
@@ -96,6 +118,10 @@ const Analysis = () => {
       teamData[team].autoScores.push(autoScore);
       teamData[team].teleScores.push(teleScore);
       teamData[team].endgameScores.push(endgameScore);
+      teamData[team].matchNumbers.push(matchNum);
+      teamData[team].climbSuccesses.push(climbSuccess);
+      teamData[team].deaths.push(died);
+      teamData[team].autoWins.push(autoWon);
     });
 
     const stats = Object.values(teamData).map(team => {
@@ -112,6 +138,13 @@ const Analysis = () => {
         return Math.sqrt(variance);
       };
 
+      const climbSuccessRate = team.climbSuccesses.length ? 
+        (team.climbSuccesses.filter(Boolean).length / team.climbSuccesses.length) * 100 : 0;
+      const deathRate = team.deaths.length ? 
+        (team.deaths.filter(Boolean).length / team.deaths.length) * 100 : 0;
+      const autoWinRate = team.autoWins.length ? 
+        (team.autoWins.filter(Boolean).length / team.autoWins.length) * 100 : 0;
+
       return {
         team: team.team,
         matches: team.matches.length,
@@ -121,11 +154,15 @@ const Analysis = () => {
         stdDev: stdDev(totalScores),
         autoAvg: avg(autoScores),
         teleAvg: avg(teleScores),
-        endgameAvg: avg(endgameScores)
+        endgameAvg: avg(endgameScores),
+        climbSuccessRate,
+        deathRate,
+        autoWinRate,
+        rawData: team
       };
     });
 
-    return stats.sort((a, b) => b.avgTotal - a.avgTotal);
+    return { stats, rawTeamData: teamData };
   };
 
   const fetchAndParseData = useCallback(async (url) => {
@@ -150,7 +187,7 @@ const Analysis = () => {
       console.log('CSV text length:', csvText.length);
       console.log('First 200 chars of CSV:', csvText.substring(0, 200));
       
-      const stats = parseCSVData(csvText);
+      const { stats, rawTeamData } = parseCSVData(csvText);
       console.log('Parsed stats:', stats);
       
       setTeamStats(stats);
@@ -201,6 +238,317 @@ const Analysis = () => {
         return [...prev, team];
       }
     });
+  };
+
+  const handleSort = (key) => {
+    if (key === 'rank' || key === 'picklist') return;
+    
+    let direction = 'desc';
+    if (sortConfig.key === key && sortConfig.direction === 'desc') {
+      direction = 'asc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedTeamStats = () => {
+    const sortableStats = [...teamStats];
+    if (sortConfig.key) {
+      sortableStats.sort((a, b) => {
+        const aVal = a[sortConfig.key];
+        const bVal = b[sortConfig.key];
+        
+        if (typeof aVal === 'number' && typeof bVal === 'number') {
+          return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+        }
+        
+        const aStr = String(aVal).toLowerCase();
+        const bStr = String(bVal).toLowerCase();
+        if (sortConfig.direction === 'asc') {
+          return aStr < bStr ? -1 : aStr > bStr ? 1 : 0;
+        } else {
+          return aStr > bStr ? -1 : aStr < bStr ? 1 : 0;
+        }
+      });
+    }
+    return sortableStats;
+  };
+
+  const generateScoreOverTimeData = () => {
+    if (!teamStats.length) return null;
+    
+    const topTeams = teamStats.slice(0, 8);
+    const colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#f97316', '#84cc16'];
+    
+    const allMatches = new Set();
+    topTeams.forEach(team => {
+      team.rawData.matchNumbers.forEach(match => allMatches.add(match));
+    });
+    const sortedMatches = Array.from(allMatches).sort((a, b) => a - b);
+    
+    const datasets = topTeams.map((team, index) => {
+      const rawData = team.rawData;
+      
+      const data = sortedMatches.map(matchNum => {
+        const matchIndex = rawData.matchNumbers.findIndex(m => m === matchNum);
+        return matchIndex !== -1 ? rawData.totalScores[matchIndex] : null;
+      });
+      
+      return {
+        label: `Team ${team.team}`,
+        data: data,
+        borderColor: colors[index],
+        backgroundColor: colors[index] + '20',
+        tension: 0.1,
+        spanGaps: true
+      };
+    });
+    
+    return {
+      labels: sortedMatches.map(m => `Match ${m}`),
+      datasets,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Score Over Time (Top 8 Teams)',
+            color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+          },
+          legend: {
+            labels: {
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Match Number',
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            },
+            ticks: {
+              color: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7280'
+            },
+            grid: {
+              color: document.body.classList.contains('dark-mode') ? '#475569' : '#e5e7eb'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Total Score',
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            },
+            ticks: {
+              color: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7280'
+            },
+            grid: {
+              color: document.body.classList.contains('dark-mode') ? '#475569' : '#e5e7eb'
+            }
+          }
+        }
+      }
+    };
+  };
+
+  const generateContributionBreakdownData = () => {
+    if (!teamStats.length) return null;
+    
+    const topTeams = teamStats.slice(0, 10);
+    
+    return {
+      labels: topTeams.map(team => `Team ${team.team}`),
+      datasets: [
+        {
+          label: 'Auto Points',
+          data: topTeams.map(team => team.autoAvg),
+          backgroundColor: '#3b82f6',
+        },
+        {
+          label: 'Teleop Points',
+          data: topTeams.map(team => team.teleAvg),
+          backgroundColor: '#10b981',
+        },
+        {
+          label: 'Endgame Points',
+          data: topTeams.map(team => team.endgameAvg),
+          backgroundColor: '#f59e0b',
+        }
+      ],
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Score Contribution Breakdown (Top 10 Teams)',
+            color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+          },
+          legend: {
+            labels: {
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            ticks: {
+              color: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7280'
+            },
+            grid: {
+              color: document.body.classList.contains('dark-mode') ? '#475569' : '#e5e7eb'
+            }
+          },
+          y: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Average Points',
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            },
+            ticks: {
+              color: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7280'
+            },
+            grid: {
+              color: document.body.classList.contains('dark-mode') ? '#475569' : '#e5e7eb'
+            }
+          }
+        }
+      }
+    };
+  };
+
+  const generateReliabilityData = () => {
+    if (!teamStats.length) return null;
+    
+    const topTeams = teamStats.slice(0, 10);
+    
+    return {
+      labels: topTeams.map(team => `Team ${team.team}`),
+      datasets: [
+        {
+          label: 'Climb Success %',
+          data: topTeams.map(team => team.climbSuccessRate),
+          backgroundColor: '#10b981',
+        },
+        {
+          label: 'Auto Win %',
+          data: topTeams.map(team => team.autoWinRate),
+          backgroundColor: '#3b82f6',
+        },
+        {
+          label: 'Death Rate %',
+          data: topTeams.map(team => team.deathRate),
+          backgroundColor: '#ef4444',
+        }
+      ],
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Reliability Metrics (Top 10 Teams)',
+            color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+          },
+          legend: {
+            labels: {
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7280'
+            },
+            grid: {
+              color: document.body.classList.contains('dark-mode') ? '#475569' : '#e5e7eb'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Percentage (%)',
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            },
+            ticks: {
+              color: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7280'
+            },
+            grid: {
+              color: document.body.classList.contains('dark-mode') ? '#475569' : '#e5e7eb'
+            }
+          }
+        }
+      }
+    };
+  };
+
+  const generateConsistencyData = () => {
+    if (!teamStats.length) return null;
+    
+    const topTeams = teamStats.slice(0, 10);
+    
+    return {
+      labels: topTeams.map(team => `Team ${team.team}`),
+      datasets: [
+        {
+          label: 'Average Score',
+          data: topTeams.map(team => team.avgTotal),
+          backgroundColor: '#3b82f6',
+        },
+        {
+          label: 'Standard Deviation',
+          data: topTeams.map(team => team.stdDev),
+          backgroundColor: '#ef4444',
+        }
+      ],
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Score Consistency (Top 10 Teams)',
+            color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+          },
+          legend: {
+            labels: {
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7280'
+            },
+            grid: {
+              color: document.body.classList.contains('dark-mode') ? '#475569' : '#e5e7eb'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Points',
+              color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
+            },
+            ticks: {
+              color: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7280'
+            },
+            grid: {
+              color: document.body.classList.contains('dark-mode') ? '#475569' : '#e5e7eb'
+            }
+          }
+        }
+      }
+    };
+  };
+
+  const getSortIcon = (columnKey) => {
+    return '';
   };
 
   const formatTime = (date) => {
@@ -264,20 +612,20 @@ const Analysis = () => {
                   <thead>
                     <tr>
                       <th>Rank</th>
-                      <th>Team</th>
-                      <th>Matches</th>
-                      <th>Avg Total</th>
-                      <th>Max</th>
-                      <th>Min</th>
-                      <th>Std Dev</th>
-                      <th>Auto Avg</th>
-                      <th>Tele Avg</th>
-                      <th>Endgame Avg</th>
+                      <th className="sortable" onClick={() => handleSort('team')}>Team{getSortIcon('team')}</th>
+                      <th className="sortable" onClick={() => handleSort('matches')}>Matches{getSortIcon('matches')}</th>
+                      <th className="sortable" onClick={() => handleSort('avgTotal')}>Avg Total{getSortIcon('avgTotal')}</th>
+                      <th className="sortable" onClick={() => handleSort('maxTotal')}>Max{getSortIcon('maxTotal')}</th>
+                      <th className="sortable" onClick={() => handleSort('minTotal')}>Min{getSortIcon('minTotal')}</th>
+                      <th className="sortable" onClick={() => handleSort('stdDev')}>Std Dev{getSortIcon('stdDev')}</th>
+                      <th className="sortable" onClick={() => handleSort('autoAvg')}>Auto Avg{getSortIcon('autoAvg')}</th>
+                      <th className="sortable" onClick={() => handleSort('teleAvg')}>Tele Avg{getSortIcon('teleAvg')}</th>
+                      <th className="sortable" onClick={() => handleSort('endgameAvg')}>Endgame Avg{getSortIcon('endgameAvg')}</th>
                       <th>Picklist</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {teamStats.map((team, index) => (
+                    {getSortedTeamStats().map((team, index) => (
                       <tr key={team.team} className={picklist.includes(team.team) ? 'picklisted' : ''}>
                         <td>{index + 1}</td>
                         <td className="team-cell">{team.team}</td>
@@ -301,6 +649,46 @@ const Analysis = () => {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+            {/* Data Visualizations */}
+            <div className="charts-section">
+              <div className="chart-row">
+                <div className="chart-island">
+                  <h3>Score Over Time</h3>
+                  <div className="chart-container">
+                    {generateScoreOverTimeData() && (
+                      <Line data={generateScoreOverTimeData()} options={generateScoreOverTimeData().options} />
+                    )}
+                  </div>
+                </div>
+                <div className="chart-island">
+                  <h3>Score Consistency</h3>
+                  <div className="chart-container">
+                    {generateConsistencyData() && (
+                      <Bar data={generateConsistencyData()} options={generateConsistencyData().options} />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="chart-row">
+                <div className="chart-island">
+                  <h3>Contribution Breakdown</h3>
+                  <div className="chart-container">
+                    {generateContributionBreakdownData() && (
+                      <Bar data={generateContributionBreakdownData()} options={generateContributionBreakdownData().options} />
+                    )}
+                  </div>
+                </div>
+                <div className="chart-island">
+                  <h3>Reliability Metrics</h3>
+                  <div className="chart-container">
+                    {generateReliabilityData() && (
+                      <Bar data={generateReliabilityData()} options={generateReliabilityData().options} />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
