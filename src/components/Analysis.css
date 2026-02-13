@@ -466,6 +466,94 @@ body.dark-mode .analyze-btn.selected {
   color: white;
 }
 
+.analyze-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.select-all-btn {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 50px;
+}
+
+.select-all-btn:hover {
+  background: #e5e7eb;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+body.dark-mode .select-all-btn {
+  background: #475569;
+  border-color: #64748b;
+  color: #94a3b8;
+}
+
+body.dark-mode .select-all-btn:hover {
+  background: #334155;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.leaderboard-header h3 {
+  margin: 0;
+}
+
+.table-controls {
+  position: absolute;
+  right: 60px;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.select-all-btn-header {
+  background: #3b82f6;
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 60px;
+}
+
+.select-all-btn-header:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+body.dark-mode .select-all-btn-header {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+body.dark-mode .select-all-btn-header:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
 .sortable {
   cursor: pointer;
   user-select: none;

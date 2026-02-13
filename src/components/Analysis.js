@@ -33,6 +33,8 @@ const Analysis = () => {
   const [error, setError] = useState('');
   const [teamStats, setTeamStats] = useState([]);
   const [analyzeList, setAnalyzeList] = useState([]);
+  const [selectAllMode, setSelectAllMode] = useState('Chosen');
+  const [chosenTeams, setChosenTeams] = useState([]);
   const [refreshTimer, setRefreshTimer] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'avgTotal', direction: 'desc' });
 
@@ -196,7 +198,10 @@ const Analysis = () => {
       if (stats.length === 0) {
         setError('No valid team data found in CSV');
       } else {
-        setAnalyzeList([stats[0].team]);
+        if (analyzeList.length === 0) {
+          setAnalyzeList([stats[0].team]);
+          setChosenTeams([stats[0].team]);
+        }
       }
     } catch (err) {
       setError(`Error loading data: ${err.message}`);
@@ -229,18 +234,40 @@ const Analysis = () => {
     setIsConnected(false);
     setTeamStats([]);
     setAnalyzeList([]);
+    setChosenTeams([]);
+    setSelectAllMode('Chosen');
     setLastUpdated(null);
     setError('');
   };
 
   const toggleAnalyze = (team) => {
     setAnalyzeList(prev => {
-      if (prev.includes(team)) {
-        return prev.filter(t => t !== team);
-      } else {
-        return [...prev, team];
+      const newList = prev.includes(team) 
+        ? prev.filter(t => t !== team)
+        : [...prev, team];
+      
+      setChosenTeams(newList);
+      if (selectAllMode !== 'Chosen') {
+        setSelectAllMode('Chosen');
       }
+      return newList;
     });
+  };
+
+  const handleSelectAllMode = () => {
+    const modes = ['All', 'None', 'Chosen'];
+    const currentIndex = modes.indexOf(selectAllMode);
+    const nextMode = modes[(currentIndex + 1) % modes.length];
+    
+    setSelectAllMode(nextMode);
+    
+    if (nextMode === 'All') {
+      setAnalyzeList(teamStats.map(team => team.team));
+    } else if (nextMode === 'None') {
+      setAnalyzeList([]);
+    } else if (nextMode === 'Chosen') {
+      setAnalyzeList(chosenTeams);
+    }
   };
 
   const handleSort = (key) => {
@@ -591,7 +618,17 @@ const Analysis = () => {
         {isConnected && teamStats.length > 0 ? (
           <div className="analysis-content">
             <div className="leaderboard-section">
-              <h3>Team Leaderboard</h3>
+              <div className="leaderboard-header">
+                <h3>Team Leaderboard</h3>
+                <div className="table-controls">
+                  <button 
+                    className="select-all-btn-header"
+                    onClick={handleSelectAllMode}
+                  >
+                    {selectAllMode}
+                  </button>
+                </div>
+              </div>
               <div className="table-container">
                 <table className="leaderboard-table">
                   <thead>
