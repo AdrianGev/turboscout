@@ -167,7 +167,7 @@ const Analysis = () => {
     return { stats, rawTeamData: teamData };
   };
 
-  const fetchAndParseData = useCallback(async (url) => {
+  const fetchAndParseData = async (url) => {
     if (!url) {
       console.log('No URL provided to fetchAndParseData');
       return;
@@ -198,9 +198,13 @@ const Analysis = () => {
       if (stats.length === 0) {
         setError('No valid team data found in CSV');
       } else {
-        if (analyzeList.length === 0) {
+        const currentTeams = analyzeList.filter(team => stats.find(stat => stat.team === team));
+        if (currentTeams.length === 0) {
           setAnalyzeList([stats[0].team]);
           setChosenTeams([stats[0].team]);
+        } else {
+          setAnalyzeList(currentTeams);
+          setChosenTeams(currentTeams);
         }
       }
     } catch (err) {
@@ -209,7 +213,7 @@ const Analysis = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
   const handleConnect = () => {
     if (!csvUrl.trim()) {
