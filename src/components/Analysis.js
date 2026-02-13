@@ -32,7 +32,7 @@ const Analysis = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [teamStats, setTeamStats] = useState([]);
-  const [picklist, setPicklist] = useState([]);
+  const [analyzeList, setAnalyzeList] = useState([]);
   const [refreshTimer, setRefreshTimer] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'avgTotal', direction: 'desc' });
 
@@ -195,6 +195,8 @@ const Analysis = () => {
       
       if (stats.length === 0) {
         setError('No valid team data found in CSV');
+      } else {
+        setAnalyzeList([stats[0].team]);
       }
     } catch (err) {
       setError(`Error loading data: ${err.message}`);
@@ -226,12 +228,13 @@ const Analysis = () => {
     setCsvUrl('');
     setIsConnected(false);
     setTeamStats([]);
+    setAnalyzeList([]);
     setLastUpdated(null);
     setError('');
   };
 
-  const togglePicklist = (team) => {
-    setPicklist(prev => {
+  const toggleAnalyze = (team) => {
+    setAnalyzeList(prev => {
       if (prev.includes(team)) {
         return prev.filter(t => t !== team);
       } else {
@@ -241,7 +244,7 @@ const Analysis = () => {
   };
 
   const handleSort = (key) => {
-    if (key === 'rank' || key === 'picklist') return;
+    if (key === 'rank' || key === 'analyze') return;
     
     let direction = 'desc';
     if (sortConfig.key === key && sortConfig.direction === 'desc') {
@@ -274,18 +277,18 @@ const Analysis = () => {
   };
 
   const generateScoreOverTimeData = () => {
-    if (!teamStats.length) return null;
+    if (!teamStats.length || !analyzeList.length) return null;
     
-    const topTeams = teamStats.slice(0, 8);
-    const colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#f97316', '#84cc16'];
+    const selectedTeams = teamStats.filter(team => analyzeList.includes(team.team));
+    const colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#f97316', '#84cc16', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
     
     const allMatches = new Set();
-    topTeams.forEach(team => {
+    selectedTeams.forEach(team => {
       team.rawData.matchNumbers.forEach(match => allMatches.add(match));
     });
     const sortedMatches = Array.from(allMatches).sort((a, b) => a - b);
     
-    const datasets = topTeams.map((team, index) => {
+    const datasets = selectedTeams.map((team, index) => {
       const rawData = team.rawData;
       
       const data = sortedMatches.map(matchNum => {
@@ -310,11 +313,6 @@ const Analysis = () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          title: {
-            display: true,
-            text: 'Score Over Time (Top 8 Teams)',
-            color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
-          },
           legend: {
             labels: {
               color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
@@ -354,37 +352,33 @@ const Analysis = () => {
   };
 
   const generateContributionBreakdownData = () => {
-    if (!teamStats.length) return null;
+    if (!teamStats.length || !analyzeList.length) return null;
     
-    const topTeams = teamStats.slice(0, 10);
+    const selectedTeams = teamStats.filter(team => analyzeList.includes(team.team));
     
     return {
-      labels: topTeams.map(team => `Team ${team.team}`),
+      labels: selectedTeams.map(team => `Team ${team.team}`),
       datasets: [
         {
           label: 'Auto Points',
-          data: topTeams.map(team => team.autoAvg),
+          data: selectedTeams.map(team => team.autoAvg),
           backgroundColor: '#3b82f6',
         },
         {
           label: 'Teleop Points',
-          data: topTeams.map(team => team.teleAvg),
+          data: selectedTeams.map(team => team.teleAvg),
           backgroundColor: '#10b981',
         },
         {
           label: 'Endgame Points',
-          data: topTeams.map(team => team.endgameAvg),
+          data: selectedTeams.map(team => team.endgameAvg),
           backgroundColor: '#f59e0b',
         }
       ],
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          title: {
-            display: true,
-            text: 'Score Contribution Breakdown (Top 10 Teams)',
-            color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
-          },
           legend: {
             labels: {
               color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
@@ -421,37 +415,33 @@ const Analysis = () => {
   };
 
   const generateReliabilityData = () => {
-    if (!teamStats.length) return null;
+    if (!teamStats.length || !analyzeList.length) return null;
     
-    const topTeams = teamStats.slice(0, 10);
+    const selectedTeams = teamStats.filter(team => analyzeList.includes(team.team));
     
     return {
-      labels: topTeams.map(team => `Team ${team.team}`),
+      labels: selectedTeams.map(team => `Team ${team.team}`),
       datasets: [
         {
           label: 'Climb Success %',
-          data: topTeams.map(team => team.climbSuccessRate),
+          data: selectedTeams.map(team => team.climbSuccessRate),
           backgroundColor: '#10b981',
         },
         {
           label: 'Auto Win %',
-          data: topTeams.map(team => team.autoWinRate),
+          data: selectedTeams.map(team => team.autoWinRate),
           backgroundColor: '#3b82f6',
         },
         {
           label: 'Death Rate %',
-          data: topTeams.map(team => team.deathRate),
+          data: selectedTeams.map(team => team.deathRate),
           backgroundColor: '#ef4444',
         }
       ],
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          title: {
-            display: true,
-            text: 'Reliability Metrics (Top 10 Teams)',
-            color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
-          },
           legend: {
             labels: {
               color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
@@ -488,32 +478,28 @@ const Analysis = () => {
   };
 
   const generateConsistencyData = () => {
-    if (!teamStats.length) return null;
+    if (!teamStats.length || !analyzeList.length) return null;
     
-    const topTeams = teamStats.slice(0, 10);
+    const selectedTeams = teamStats.filter(team => analyzeList.includes(team.team));
     
     return {
-      labels: topTeams.map(team => `Team ${team.team}`),
+      labels: selectedTeams.map(team => `Team ${team.team}`),
       datasets: [
         {
           label: 'Average Score',
-          data: topTeams.map(team => team.avgTotal),
+          data: selectedTeams.map(team => team.avgTotal),
           backgroundColor: '#3b82f6',
         },
         {
           label: 'Standard Deviation',
-          data: topTeams.map(team => team.stdDev),
+          data: selectedTeams.map(team => team.stdDev),
           backgroundColor: '#ef4444',
         }
       ],
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          title: {
-            display: true,
-            text: 'Score Consistency (Top 10 Teams)',
-            color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
-          },
           legend: {
             labels: {
               color: document.body.classList.contains('dark-mode') ? '#f1f5f9' : '#1f2937'
@@ -620,12 +606,12 @@ const Analysis = () => {
                       <th className="sortable" onClick={() => handleSort('autoAvg')}>Auto Avg{getSortIcon('autoAvg')}</th>
                       <th className="sortable" onClick={() => handleSort('teleAvg')}>Tele Avg{getSortIcon('teleAvg')}</th>
                       <th className="sortable" onClick={() => handleSort('endgameAvg')}>Endgame Avg{getSortIcon('endgameAvg')}</th>
-                      <th>Picklist</th>
+                      <th>Analyze</th>
                     </tr>
                   </thead>
                   <tbody>
                     {getSortedTeamStats().map((team, index) => (
-                      <tr key={team.team} className={picklist.includes(team.team) ? 'picklisted' : ''}>
+                      <tr key={team.team} className={analyzeList.includes(team.team) ? 'analyzed' : ''}>
                         <td>{index + 1}</td>
                         <td className="team-cell">{team.team}</td>
                         <td>{team.matches}</td>
@@ -638,10 +624,10 @@ const Analysis = () => {
                         <td>{team.endgameAvg.toFixed(1)}</td>
                         <td>
                           <button 
-                            className={`star-btn ${picklist.includes(team.team) ? 'starred' : ''}`}
-                            onClick={() => togglePicklist(team.team)}
+                            className={`analyze-btn ${analyzeList.includes(team.team) ? 'selected' : ''}`}
+                            onClick={() => toggleAnalyze(team.team)}
                           >
-                            ⭐
+                            {analyzeList.includes(team.team) ? '✓' : 'X'}
                           </button>
                         </td>
                       </tr>
@@ -650,76 +636,51 @@ const Analysis = () => {
                 </table>
               </div>
             </div>
-
-            {/* Data Visualizations */}
-            <div className="charts-section">
-              <div className="chart-row">
-                <div className="chart-island">
-                  <h3>Score Over Time</h3>
-                  <div className="chart-container">
-                    {generateScoreOverTimeData() && (
-                      <Line data={generateScoreOverTimeData()} options={generateScoreOverTimeData().options} />
-                    )}
-                  </div>
-                </div>
-                <div className="chart-island">
-                  <h3>Score Consistency</h3>
-                  <div className="chart-container">
-                    {generateConsistencyData() && (
-                      <Bar data={generateConsistencyData()} options={generateConsistencyData().options} />
-                    )}
-                  </div>
+            <div className={`charts-section ${analyzeList.length > 5 ? 'stacked-layout' : 'grid-layout'}`}>
+              <div className="chart-island">
+                <h3>Score Over Time</h3>
+                <div className={`chart-container ${analyzeList.length > 5 ? 'expanded-height' : ''}`}>
+                  {generateScoreOverTimeData() && (
+                    <Line data={generateScoreOverTimeData()} options={generateScoreOverTimeData().options} />
+                  )}
                 </div>
               </div>
-              <div className="chart-row">
-                <div className="chart-island">
-                  <h3>Contribution Breakdown</h3>
-                  <div className="chart-container">
-                    {generateContributionBreakdownData() && (
-                      <Bar data={generateContributionBreakdownData()} options={generateContributionBreakdownData().options} />
-                    )}
-                  </div>
+              <div className="chart-island">
+                <h3>Score Consistency</h3>
+                <div className="chart-container">
+                  {generateConsistencyData() && (
+                    <Bar data={generateConsistencyData()} options={generateConsistencyData().options} />
+                  )}
                 </div>
-                <div className="chart-island">
-                  <h3>Reliability Metrics</h3>
-                  <div className="chart-container">
-                    {generateReliabilityData() && (
-                      <Bar data={generateReliabilityData()} options={generateReliabilityData().options} />
-                    )}
-                  </div>
+              </div>
+              <div className="chart-island">
+                <h3>Contribution Breakdown</h3>
+                <div className="chart-container">
+                  {generateContributionBreakdownData() && (
+                    <Bar data={generateContributionBreakdownData()} options={generateContributionBreakdownData().options} />
+                  )}
+                </div>
+              </div>
+              <div className="chart-island">
+                <h3>Reliability Metrics</h3>
+                <div className="chart-container">
+                  {generateReliabilityData() && (
+                    <Bar data={generateReliabilityData()} options={generateReliabilityData().options} />
+                  )}
                 </div>
               </div>
             </div>
 
-            {picklist.length > 0 && (
-              <div className="picklist-section">
-                <h3>Picklist ({picklist.length} teams)</h3>
-                <div className="picklist-teams">
-                  {picklist.map((team, index) => (
-                    <div key={team} className="picklist-item">
-                      <span className="picklist-rank">{index + 1}.</span>
-                      <span className="picklist-team">{team}</span>
-                      <button 
-                        className="remove-btn"
-                        onClick={() => togglePicklist(team)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         ) : isConnected ? (
           <div className="no-data">
-            <p>No data found. Make sure your sheet is published correctly and contains scouting data.</p>
+            <p>No data found. Make sure the sheet is published correctly and contains scouting data.</p>
           </div>
         ) : (
           <div className="welcome-message">
             <h3>Connect Your Google Sheet</h3>
             <p>Connect your existing scouting sheet to view team statistics and build your picklist.</p>
-            <p>No setup required - just paste your published CSV link above.</p>
+            <p>No setup required, just paste your published CSV link above.</p>
           </div>
         )}
       </div>

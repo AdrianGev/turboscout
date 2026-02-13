@@ -238,6 +238,12 @@
   text-align: center;
 }
 
+.keywords-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .keywords-section .chip-select {
   display: flex;
   justify-content: center;

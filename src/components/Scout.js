@@ -112,6 +112,7 @@ const Scout = () => {
 
   const defenseTags = ['Aggressive', 'Smart driver', 'Feeds', 'Protected', 'Disruptive'];
   const keywordOptions = ['Aggressive', 'High-scorer', 'Defensive', 'Hoarder', 'Bump', 'Fast', 'Accurate', 'Cooperative'];
+  const oppositeKeywordOptions = ['Passive', 'Low-scorer', 'Harmless', 'No Hoard', 'No Bump', 'Slow', 'Inaccurate', 'Solo'];
 
   const FIELDS = [
     'match',
@@ -559,12 +560,20 @@ const Scout = () => {
 
         <div className="keywords-section">
           <h3 className="keywords-title">Keywords</h3>
-          <ChipSelect
-            options={keywordOptions}
-            selectedValues={formData.keywords}
-            onChange={(values) => handleInputChange('keywords', values)}
-            multiSelect={true}
-          />
+          <div className="keywords-rows">
+            <ChipSelect
+              options={keywordOptions}
+              selectedValues={formData.keywords}
+              onChange={(values) => handleInputChange('keywords', values)}
+              multiSelect={true}
+            />
+            <ChipSelect
+              options={oppositeKeywordOptions}
+              selectedValues={formData.keywords}
+              onChange={(values) => handleInputChange('keywords', values)}
+              multiSelect={true}
+            />
+          </div>
         </div>
 
         <div className="total-score-section">

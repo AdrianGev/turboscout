@@ -28,6 +28,19 @@
   gap: 16px;
 }
 
+.main-button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.small-buttons-row {
+  display: flex;
+  gap: 4px;
+  width: 240px;
+}
+
 .big-stepper-btn {
   width: 240px;
   height: 100px;
@@ -81,6 +94,59 @@
   border-color: #3b82f6;
 }
 
+.small-stepper-btn {
+  flex: 1;
+  height: 56px;
+  border: 2px solid #d1d5db;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.2s;
+}
+
+.small-stepper-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.small-stepper-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.small-stepper-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.small-stepper-btn.minus {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+.small-stepper-btn.minus:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.small-stepper-btn.plus {
+  background: #f0f9ff;
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+
+.small-stepper-btn.plus:hover:not(:disabled) {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}
+
 body.dark-mode .big-stepper-label {
   color: #f1f5f9;
 }
@@ -120,6 +186,42 @@ body.dark-mode .big-stepper-btn.plus {
 }
 
 body.dark-mode .big-stepper-btn.plus:hover:not(:disabled) {
+  background: #1d4ed8;
+  border-color: #2563eb;
+  color: #dbeafe;
+}
+
+body.dark-mode .small-stepper-btn {
+  background: #475569;
+  border-color: #64748b;
+  color: #94a3b8;
+}
+
+body.dark-mode .small-stepper-btn:hover:not(:disabled) {
+  background: #334155;
+  border-color: #3b82f6;
+  color: #f1f5f9;
+}
+
+body.dark-mode .small-stepper-btn.minus {
+  background: #7f1d1d;
+  border-color: #991b1b;
+  color: #fca5a5;
+}
+
+body.dark-mode .small-stepper-btn.minus:hover:not(:disabled) {
+  background: #991b1b;
+  border-color: #dc2626;
+  color: #fecaca;
+}
+
+body.dark-mode .small-stepper-btn.plus {
+  background: #1e3a8a;
+  border-color: #1d4ed8;
+  color: #93c5fd;
+}
+
+body.dark-mode .small-stepper-btn.plus:hover:not(:disabled) {
   background: #1d4ed8;
   border-color: #2563eb;
   color: #dbeafe;
