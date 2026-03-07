@@ -2,7 +2,7 @@ import React from 'react';
 import './TopNav.css';
 
 const TopNav = ({ activeTab, onTabChange, onLogoClick }) => {
-  const tabs = ['Home', 'Scout', 'Analysis', 'Settings'];
+  const tabs = ['Home', 'Scout', 'Analysis', 'Predict', 'Settings'];
 
   return (
     <div className="top-nav">

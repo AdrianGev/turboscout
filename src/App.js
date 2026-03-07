@@ -3,6 +3,7 @@ import TopNav from './components/TopNav';
 import Home from './components/Home';
 import Scout from './components/Scout';
 import Analysis from './components/Analysis';
+import Predict from './components/Predict';
 import Settings from './components/Settings';
 import './App.css';
 
@@ -21,6 +22,8 @@ function App() {
         return <Scout />;
       case 'Analysis':
         return <Analysis />;
+      case 'Predict':
+        return <Predict />;
       case 'Settings':
         return <Settings />;
       default:
