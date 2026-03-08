@@ -141,7 +141,7 @@ const Predict = () => {
         climbSuccessRate,
         deathRate,
         autoWinRate,
-        consistency: totalScores.length > 1 ? 100 - (stdDev(totalScores) / avg(totalScores) * 100) : 50
+        consistency: totalScores.length > 1 ? Math.min(100, Math.max(0, (1 / (1 + (stdDev(totalScores) / Math.max(avg(totalScores), 1)))) * 100)) : 50
       };
     });
 
@@ -171,25 +171,34 @@ const Predict = () => {
     
     if (teams.length === 0) return null;
 
-    const totalAvg = teams.reduce((sum, team) => sum + team.avgTotal, 0);
-    const autoAvg = teams.reduce((sum, team) => sum + team.autoAvg, 0);
-    const teleAvg = teams.reduce((sum, team) => sum + team.teleAvg, 0);
-    const endgameAvg = teams.reduce((sum, team) => sum + team.endgameAvg, 0);
-    const avgConsistency = teams.reduce((sum, team) => sum + team.consistency, 0) / teams.length;
-    const avgClimbRate = teams.reduce((sum, team) => sum + team.climbSuccessRate, 0) / teams.length;
-    const avgDeathRate = teams.reduce((sum, team) => sum + team.deathRate, 0) / teams.length;
-    const avgAutoWinRate = teams.reduce((sum, team) => sum + team.autoWinRate, 0) / teams.length;
+    const totalAvg = teams.reduce((sum, team) => sum + (team.avgTotal || 0), 0);
+    const autoAvg = teams.reduce((sum, team) => sum + (team.autoAvg || 0), 0);
+    const teleAvg = teams.reduce((sum, team) => sum + (team.teleAvg || 0), 0);
+    const endgameAvg = teams.reduce((sum, team) => sum + (team.endgameAvg || 0), 0);
+    const validConsistencies = teams.filter(team => !isNaN(team.consistency)).map(team => team.consistency);
+    const avgConsistency = validConsistencies.length > 0 ? validConsistencies.reduce((sum, c) => sum + c, 0) / validConsistencies.length : NaN;
+    const validClimbRates = teams.filter(team => !isNaN(team.climbSuccessRate)).map(team => team.climbSuccessRate);
+    const avgClimbRate = validClimbRates.length > 0 ? validClimbRates.reduce((sum, c) => sum + c, 0) / validClimbRates.length : 0;
+    
+    const validDeathRates = teams.filter(team => !isNaN(team.deathRate)).map(team => team.deathRate);
+    const avgDeathRate = validDeathRates.length > 0 ? validDeathRates.reduce((sum, d) => sum + d, 0) / validDeathRates.length : 0;
+    
+    const validAutoWinRates = teams.filter(team => !isNaN(team.autoWinRate)).map(team => team.autoWinRate);
+    const avgAutoWinRate = validAutoWinRates.length > 0 ? validAutoWinRates.reduce((sum, a) => sum + a, 0) / validAutoWinRates.length : 0;
+
+    const calculateTeamScore = (team) => {
+      const baseScore = team.avgTotal || 0;
+      const climbBonus = (team.climbSuccessRate || 0) * 0.1;
+      const reliabilityBonus = (100 - (team.deathRate || 0)) * 0.05;
+      return baseScore + climbBonus + reliabilityBonus;
+    };
 
     const mvp = teams.reduce((best, team) => {
-      const teamScore = team.avgTotal * 0.4 + team.consistency * 0.3 + team.climbSuccessRate * 0.2 + (100 - team.deathRate) * 0.1;
-      const bestScore = best.avgTotal * 0.4 + best.consistency * 0.3 + best.climbSuccessRate * 0.2 + (100 - best.deathRate) * 0.1;
-      return teamScore > bestScore ? team : best;
+      return calculateTeamScore(team) > calculateTeamScore(best) ? team : best;
     });
 
     const weakest = teams.reduce((worst, team) => {
-      const teamScore = team.avgTotal * 0.4 + team.consistency * 0.3 + team.climbSuccessRate * 0.2 + (100 - team.deathRate) * 0.1;
-      const worstScore = worst.avgTotal * 0.4 + worst.consistency * 0.3 + worst.climbSuccessRate * 0.2 + (100 - worst.deathRate) * 0.1;
-      return teamScore < worstScore ? team : worst;
+      return calculateTeamScore(team) < calculateTeamScore(worst) ? team : worst;
     });
 
     return {
@@ -275,30 +284,32 @@ const Predict = () => {
       return;
     }
 
-    const redBaseScore = redStats.totalAvg;
-    const blueBaseScore = blueStats.totalAvg;
+    const calculateAllianceScore = (stats) => {
+      const predictedScore = stats.totalAvg || 0;
+      const deathRate = isNaN(stats.avgDeathRate) ? 0 : stats.avgDeathRate;
+      const climbRate = isNaN(stats.avgClimbRate) ? 0 : stats.avgClimbRate;
+      
+      const reliability = Math.max(0, 100 - deathRate);
+      const reliabilityMultiplier = Math.pow(reliability / 100, 0.3);
+      const climbMultiplier = Math.pow(climbRate / 100, 0.1);
+      
+      const adjustedScore = predictedScore * reliabilityMultiplier * climbMultiplier;
+      
+      return {
+        predictedScore: predictedScore,
+        adjustedScore: Math.max(0, adjustedScore),
+        baseScore: predictedScore,
+        reliability,
+        deathRate,
+        climbRate
+      };
+    };
     
-    const redScoreMultiplier = Math.pow(redStats.avgConsistency / 100, 0.5) * 
-                               Math.pow((100 - redStats.avgDeathRate) / 100, 0.8) * 
-                               Math.pow(redStats.avgClimbRate / 100, 0.6);
+    const redResult = calculateAllianceScore(redStats);
+    const blueResult = calculateAllianceScore(blueStats);
     
-    const blueScoreMultiplier = Math.pow(blueStats.avgConsistency / 100, 0.5) * 
-                                Math.pow((100 - blueStats.avgDeathRate) / 100, 0.8) * 
-                                Math.pow(blueStats.avgClimbRate / 100, 0.6);
-    
-    const redScore = redBaseScore * redScoreMultiplier;
-    const blueScore = blueBaseScore * blueScoreMultiplier;
-    
-    const redBonus = redStats.totalAvg > 80 ? redStats.totalAvg * 0.2 : 0;
-    const blueBonus = blueStats.totalAvg > 80 ? blueStats.totalAvg * 0.2 : 0;
-    const redPenalty = redStats.totalAvg < 30 ? redStats.totalAvg * 0.3 : 0;
-    const bluePenalty = blueStats.totalAvg < 30 ? blueStats.totalAvg * 0.3 : 0;
-    
-    const finalRedScore = redScore + redBonus - redPenalty;
-    const finalBlueScore = blueScore + blueBonus - bluePenalty;
-    
-    const totalScore = finalRedScore + finalBlueScore;
-    const redWinChance = totalScore > 0 ? (finalRedScore / totalScore) * 100 : 50;
+    const totalScore = redResult.predictedScore + blueResult.predictedScore;
+    const redWinChance = totalScore > 0 ? (redResult.predictedScore / totalScore) * 100 : 50;
     const blueWinChance = 100 - redWinChance;
 
     setPrediction({
@@ -306,12 +317,14 @@ const Predict = () => {
         ...redStats,
         winChance: redWinChance,
         loseChance: 100 - redWinChance,
+        predictedScore: redResult.predictedScore,
         factors: generateExplainingFactors(redStats, 'red')
       },
       blue: {
         ...blueStats,
         winChance: blueWinChance,
         loseChance: 100 - blueWinChance,
+        predictedScore: blueResult.predictedScore,
         factors: generateExplainingFactors(blueStats, 'blue')
       }
     });
@@ -394,9 +407,13 @@ const Predict = () => {
             <div className="win-chances">
               <div className="alliance-result red-result">
                 <h3>Red Alliance</h3>
-                <div className="win-percentage">
-                  <span className="percentage">{prediction.red.winChance.toFixed(1)}%</span>
-                  <span className="label">Win Chance</span>
+                <div className="win-probability">
+                  <div className="probability-value">{prediction.red.winChance.toFixed(1)}%</div>
+                  <div className="probability-label">Win Chance</div>
+                </div>
+                <div className="predicted-score">
+                  <div className="score-value">{prediction.red.predictedScore.toFixed(1)}</div>
+                  <div className="score-label">Predicted Score</div>
                 </div>
                 <div className="alliance-stats">
                   <div className="stat">
@@ -422,9 +439,13 @@ const Predict = () => {
 
               <div className="alliance-result blue-result">
                 <h3>Blue Alliance</h3>
-                <div className="win-percentage">
-                  <span className="percentage">{prediction.blue.winChance.toFixed(1)}%</span>
-                  <span className="label">Win Chance</span>
+                <div className="win-probability">
+                  <div className="probability-value">{prediction.blue.winChance.toFixed(1)}%</div>
+                  <div className="probability-label">Win Chance</div>
+                </div>
+                <div className="predicted-score">
+                  <div className="score-value">{prediction.blue.predictedScore.toFixed(1)}</div>
+                  <div className="score-label">Predicted Score</div>
                 </div>
                 <div className="alliance-stats">
                   <div className="stat">
@@ -445,6 +466,81 @@ const Predict = () => {
                     <span className="role-label">Weak Point:</span>
                     <span className="team-number">Team {prediction.blue.weakest.team}</span>
                   </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="team-stats-summary">
+              <h3>Individual Team Stats</h3>
+              <div className="alliances-stats">
+                <div className="alliance-team-stats red-alliance-stats">
+                  <h4>Red Alliance Teams</h4>
+                  {prediction.red.teams.map((team, index) => (
+                    <div key={index} className="team-stat-card">
+                      <div className="team-stat-header">Team {team.team}</div>
+                      <div className="team-stat-grid">
+                        <div className="stat-item">
+                          <span className="stat-label">Avg Score:</span>
+                          <span className="stat-value">{(team.avgTotal || 0).toFixed(1)}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Avg Auto:</span>
+                          <span className="stat-value">{(team.autoAvg || 0).toFixed(1)}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Climb Rate:</span>
+                          <span className="stat-value">{(team.climbSuccessRate || 0).toFixed(1)}%</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Death Rate:</span>
+                          <span className="stat-value">{(team.deathRate || 0).toFixed(1)}%</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Avg Teleop:</span>
+                          <span className="stat-value">{(team.teleAvg || 0).toFixed(1)}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Max Score:</span>
+                          <span className="stat-value">{(team.maxTotal || 0).toFixed(1)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="alliance-team-stats blue-alliance-stats">
+                  <h4>Blue Alliance Teams</h4>
+                  {prediction.blue.teams.map((team, index) => (
+                    <div key={index} className="team-stat-card">
+                      <div className="team-stat-header">Team {team.team}</div>
+                      <div className="team-stat-grid">
+                        <div className="stat-item">
+                          <span className="stat-label">Avg Score:</span>
+                          <span className="stat-value">{(team.avgTotal || 0).toFixed(1)}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Avg Auto:</span>
+                          <span className="stat-value">{(team.autoAvg || 0).toFixed(1)}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Climb Rate:</span>
+                          <span className="stat-value">{(team.climbSuccessRate || 0).toFixed(1)}%</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Death Rate:</span>
+                          <span className="stat-value">{(team.deathRate || 0).toFixed(1)}%</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Avg Teleop:</span>
+                          <span className="stat-value">{(team.teleAvg || 0).toFixed(1)}</span>
+                        </div>
+                        <div className="stat-item">
+                          <span className="stat-label">Max Score:</span>
+                          <span className="stat-value">{(team.maxTotal || 0).toFixed(1)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

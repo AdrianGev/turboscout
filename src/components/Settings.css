@@ -61,8 +61,8 @@
 .toggle-switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 50px;
+  height: 24px;
 }
 
 .toggle-switch input {
@@ -86,14 +86,120 @@
 .toggle-slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
   background-color: white;
   transition: 0.3s;
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.clear-cache-btn {
+  padding: 12px 24px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-cache-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.clear-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.clear-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.clear-modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.clear-modal-content {
+  padding: 24px;
+}
+
+.clear-modal-content p {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.clear-modal-content p:last-child {
+  margin-bottom: 0;
+}
+
+.clear-modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px 24px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.btn.secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn.secondary:hover {
+  background: #e5e7eb;
+}
+
+.btn.danger {
+  background: #dc2626;
+  color: white;
+}
+
+.btn.danger:hover {
+  background: #b91c1c;
 }
 
 input:checked + .toggle-slider {
@@ -106,6 +212,55 @@ input:focus + .toggle-slider {
 
 input:checked + .toggle-slider:before {
   transform: translateX(26px);
+}
+
+body.dark-mode .settings-card {
+  background: #1e293b;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .settings-card h2 {
+  color: #f1f5f9;
+}
+
+body.dark-mode .setting-info h3 {
+  color: #f1f5f9;
+}
+
+body.dark-mode .setting-info p {
+  color: #94a3b8;
+}
+
+body.dark-mode .clear-modal {
+  background: #1e293b;
+}
+
+body.dark-mode .clear-modal-header {
+  background: #334155;
+  border-bottom-color: #475569;
+}
+
+body.dark-mode .clear-modal-header h2 {
+  color: #f1f5f9;
+}
+
+body.dark-mode .clear-modal-content p {
+  color: #e2e8f0;
+}
+
+body.dark-mode .clear-modal-actions {
+  background: #334155;
+  border-top-color: #475569;
+}
+
+body.dark-mode .btn.secondary {
+  background: #475569;
+  color: #f1f5f9;
+  border-color: #64748b;
+}
+
+body.dark-mode .btn.secondary:hover {
+  background: #334155;
 }
 
 body.dark-mode {

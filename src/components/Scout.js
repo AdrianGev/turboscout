@@ -34,7 +34,9 @@ const Scout = () => {
       climb: 'None',
       climbLevel: 'None',
       canDescend: false,
-      died: false
+      died: false,
+      noShow: false,
+      fuel: 0
     },
     keywords: []
   });
@@ -104,6 +106,7 @@ const Scout = () => {
 
   const getEndgameScore = () => {
     let score = 0;
+    score += formData.endgame.fuel;
     if (formData.endgame.climbLevel === 'Level 1') score += 10;
     if (formData.endgame.climbLevel === 'Level 2') score += 20;
     if (formData.endgame.climbLevel === 'Level 3') score += 30;
@@ -401,6 +404,8 @@ const Scout = () => {
                 label="Fuel"
                 value={formData.auto.fuel}
                 onChange={(value) => handleNestedChange('auto', 'fuel', value)}
+                min={0}
+                max={99}
                 increment={formData.increment}
               />
             </div>
@@ -475,6 +480,8 @@ const Scout = () => {
                       label="Fuel"
                       value={currentShift.fuel}
                       onChange={(value) => handleShiftChange(activeShift, 'fuel', value)}
+                      min={0}
+                      max={99}
                       increment={formData.increment}
                     />
                   )}
@@ -541,6 +548,16 @@ const Scout = () => {
                 </button>
               </div>
             </div>
+            <div className="endgame-fuel-column">
+              <span className="endgame-climb-label">Fuel</span>
+              <BigStepper
+                value={formData.endgame.fuel}
+                onChange={(value) => handleNestedChange('endgame', 'fuel', value)}
+                min={0}
+                max={99}
+                increment={formData.increment}
+              />
+            </div>
             <div className="endgame-toggles">
               <button
                 className={`endgame-toggle-btn ${formData.endgame.canDescend ? 'selected' : ''}`}
@@ -553,6 +570,12 @@ const Scout = () => {
                 onClick={() => handleNestedChange('endgame', 'died', !formData.endgame.died)}
               >
                 Died
+              </button>
+              <button
+                className={`endgame-toggle-btn ${formData.endgame.noShow ? 'selected' : ''}`}
+                onClick={() => handleNestedChange('endgame', 'noShow', !formData.endgame.noShow)}
+              >
+                No Show
               </button>
             </div>
           </div>

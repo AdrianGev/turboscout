@@ -533,7 +533,8 @@
   flex-wrap: wrap;
 }
 
-.endgame-climb-column {
+.endgame-climb-column,
+.endgame-fuel-column {
   display: flex;
   flex-direction: column;
   align-items: center;

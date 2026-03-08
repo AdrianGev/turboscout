@@ -3,6 +3,7 @@ import './Settings.css';
 
 const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [showClearModal, setShowClearModal] = useState(false);
 
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('turboscout-dark-mode');
@@ -26,6 +27,19 @@ const Settings = () => {
     setDarkMode(newDarkMode);
     localStorage.setItem('turboscout-dark-mode', JSON.stringify(newDarkMode));
     applyDarkMode(newDarkMode);
+  };
+
+  const handleClearCache = () => {
+    setShowClearModal(true);
+  };
+
+  const handleConfirmClear = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
+  const handleCancelClear = () => {
+    setShowClearModal(false);
   };
 
   return (
@@ -55,12 +69,39 @@ const Settings = () => {
         <div className="settings-section">
           <div className="setting-item">
             <div className="setting-info">
-              <h3>More Settings</h3>
-              <p>Additional settings coming soon...</p>
+              <h3>Clear Cache</h3>
+              <p>Clear all stored data and refresh the app</p>
+            </div>
+            <div className="setting-control">
+              <button className="clear-cache-btn" onClick={handleClearCache}>
+                Clear Cache
+              </button>
             </div>
           </div>
         </div>
       </div>
+      
+      {showClearModal && (
+        <div className="modal-overlay" onClick={handleCancelClear}>
+          <div className="clear-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="clear-modal-header">
+              <h2>Clear Cache</h2>
+            </div>
+            <div className="clear-modal-content">
+              <p>Are you sure you want to clear all cached data?</p>
+              <p>This will remove all stored settings, team data, and refresh the application.</p>
+            </div>
+            <div className="clear-modal-actions">
+              <button className="btn secondary" onClick={handleCancelClear}>
+                Cancel
+              </button>
+              <button className="btn danger" onClick={handleConfirmClear}>
+                Clear Cache
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
