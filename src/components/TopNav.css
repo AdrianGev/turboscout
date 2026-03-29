@@ -44,13 +44,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1e40af;
+  color: var(--accent-dark);
 }
 
 .wordmark {
   font-weight: 700;
   font-size: 22px;
-  color: #1e40af;
+  color: var(--accent-dark);
 }
 
 .nav-center {
@@ -78,7 +78,7 @@
 }
 
 .nav-tab.active {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 
@@ -141,11 +141,11 @@ body.dark-mode .nav-container {
 }
 
 body.dark-mode .logo-icon {
-  color: #60a5fa;
+  color: var(--accent);
 }
 
 body.dark-mode .wordmark {
-  color: #60a5fa;
+  color: var(--accent);
 }
 
 body.dark-mode .nav-tab {
@@ -158,7 +158,7 @@ body.dark-mode .nav-tab:hover {
 }
 
 body.dark-mode .nav-tab.active {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 

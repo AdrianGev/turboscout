@@ -30,6 +30,42 @@
   font-size: 16px;
 }
 
+.prediction-mode-selector {
+  margin-bottom: 32px;
+}
+
+.mode-tabs {
+  display: flex;
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.mode-tab {
+  flex: 1;
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-tab:hover {
+  color: #374151;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.mode-tab.active {
+  background: white;
+  color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .alliances-input {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -89,8 +125,8 @@
 
 .team-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .red-alliance .team-input:focus {
@@ -111,7 +147,7 @@
 }
 
 .predict-btn {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -123,7 +159,7 @@
 }
 
 .predict-btn:hover {
-  background: #2563eb;
+  background: var(--accent-dark);
   transform: translateY(-1px);
 }
 
@@ -483,6 +519,25 @@
 body.dark-mode .predict-card {
   background: #1e293b;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .mode-tabs {
+  background: #0f172a;
+}
+
+body.dark-mode .mode-tab {
+  color: #94a3b8;
+}
+
+body.dark-mode .mode-tab:hover {
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .mode-tab.active {
+  background: #1e293b;
+  color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode .predict-header h2 {

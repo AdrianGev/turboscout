@@ -30,17 +30,17 @@
 }
 
 .toggle-btn:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   transform: scale(1.05);
 }
 
 .toggle-btn.active {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
 }
 
 .toggle-btn.active:hover {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
 }

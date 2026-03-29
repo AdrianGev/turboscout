@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import ApiScout from './ApiScout';
 import './Predict.css';
 
 const Predict = () => {
+  const [mode, setMode] = useState(() => {
+    return localStorage.getItem('turboscout-predict-mode') || 'local';
+  });
   const [redAlliance, setRedAlliance] = useState(() => {
     const saved = localStorage.getItem('turboscout-predict-red-alliance');
     return saved ? JSON.parse(saved) : ['', '', ''];
@@ -14,15 +18,7 @@ const Predict = () => {
   const [prediction, setPrediction] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  useEffect(() => {
-    const savedUrl = localStorage.getItem('turboscout-csv-url');
-    if (savedUrl) {
-      setIsConnected(true);
-      fetchTeamData(savedUrl);
-    }
-  }, []);
-
-  const fetchTeamData = async (url) => {
+  const fetchTeamData = useCallback(async (url) => {
     try {
       const response = await fetch(url);
       if (!response.ok) return;
@@ -33,7 +29,15 @@ const Predict = () => {
     } catch (err) {
       console.error('Error fetching team data:', err);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const savedUrl = localStorage.getItem('turboscout-csv-url');
+    if (savedUrl) {
+      setIsConnected(true);
+      fetchTeamData(savedUrl);
+    }
+  }, [fetchTeamData]);
 
   const parseCSVData = (csvText) => {
     const lines = csvText.trim().split('\n');
@@ -338,26 +342,49 @@ const Predict = () => {
     localStorage.removeItem('turboscout-predict-blue-alliance');
   };
 
-  if (!isConnected) {
-    return (
-      <div className="predict-page">
-        <div className="predict-card">
-          <div className="no-connection">
-            <h3>Connect Your Data First</h3>
-            <p>Please connect your scouting data in the Analysis tab before using match predictions.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+    localStorage.setItem('turboscout-predict-mode', newMode);
+  };
 
   return (
     <div className="predict-page">
       <div className="predict-card">
         <div className="predict-header">
           <h2>Match Prediction</h2>
-          <p>Enter team numbers to predict match outcomes. *Data-based but not 100% accurate</p>
+          <p>Choose your prediction method and analyze match outcomes</p>
         </div>
+
+        <div className="prediction-mode-selector">
+          <div className="mode-tabs">
+            <button 
+              className={`mode-tab ${mode === 'local' ? 'active' : ''}`}
+              onClick={() => handleModeChange('local')}
+            >
+              Local Data
+            </button>
+            <button 
+              className={`mode-tab ${mode === 'api-scout' ? 'active' : ''}`}
+              onClick={() => handleModeChange('api-scout')}
+            >
+              API-Scout
+            </button>
+          </div>
+        </div>
+
+        {mode === 'api-scout' ? (
+          <ApiScout />
+        ) : (
+          <>
+            {!isConnected && (
+              <div className="no-connection">
+                <h3>Connect Your Data First</h3>
+                <p>Please connect your scouting data in the Analysis tab before using local match predictions, or switch to API-Scout to analyze any FRC competition.</p>
+              </div>
+            )}
+            
+            {isConnected && (
+              <>
 
         <div className="alliances-input">
           <div className="alliance-section red-alliance">
@@ -568,6 +595,10 @@ const Predict = () => {
               </div>
             </div>
           </div>
+        )}
+            </>
+            )}
+          </>
         )}
       </div>
     </div>

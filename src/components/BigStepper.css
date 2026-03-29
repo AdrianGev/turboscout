@@ -59,7 +59,7 @@
 
 .big-stepper-btn:hover:not(:disabled) {
   background: #f3f4f6;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   transform: scale(1.05);
 }
 
@@ -84,14 +84,14 @@
 }
 
 .big-stepper-btn.plus {
-  background: #f0f9ff;
-  border-color: #93c5fd;
-  color: #2563eb;
+  background: var(--accent-light);
+  border-color: color-mix(in srgb, var(--accent) 60%, white);
+  color: var(--accent-dark);
 }
 
 .big-stepper-btn.plus:hover:not(:disabled) {
-  background: #dbeafe;
-  border-color: #3b82f6;
+  background: var(--accent-light);
+  border-color: var(--accent);
 }
 
 .small-stepper-btn {
@@ -112,7 +112,7 @@
 
 .small-stepper-btn:hover:not(:disabled) {
   background: #f3f4f6;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   transform: scale(1.05);
 }
 
@@ -137,14 +137,14 @@
 }
 
 .small-stepper-btn.plus {
-  background: #f0f9ff;
-  border-color: #93c5fd;
-  color: #2563eb;
+  background: var(--accent-light);
+  border-color: color-mix(in srgb, var(--accent) 60%, white);
+  color: var(--accent-dark);
 }
 
 .small-stepper-btn.plus:hover:not(:disabled) {
-  background: #dbeafe;
-  border-color: #3b82f6;
+  background: var(--accent-light);
+  border-color: var(--accent);
 }
 
 body.dark-mode .big-stepper-label {
@@ -163,7 +163,7 @@ body.dark-mode .big-stepper-btn {
 
 body.dark-mode .big-stepper-btn:hover:not(:disabled) {
   background: #334155;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   color: #f1f5f9;
 }
 
@@ -181,14 +181,14 @@ body.dark-mode .big-stepper-btn.minus:hover:not(:disabled) {
 
 body.dark-mode .big-stepper-btn.plus {
   background: #1e3a8a;
-  border-color: #1d4ed8;
-  color: #93c5fd;
+  border-color: var(--accent-dark);
+  color: color-mix(in srgb, var(--accent) 60%, white);
 }
 
 body.dark-mode .big-stepper-btn.plus:hover:not(:disabled) {
-  background: #1d4ed8;
-  border-color: #2563eb;
-  color: #dbeafe;
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  color: var(--accent-light);
 }
 
 body.dark-mode .small-stepper-btn {
@@ -199,7 +199,7 @@ body.dark-mode .small-stepper-btn {
 
 body.dark-mode .small-stepper-btn:hover:not(:disabled) {
   background: #334155;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   color: #f1f5f9;
 }
 
@@ -217,12 +217,12 @@ body.dark-mode .small-stepper-btn.minus:hover:not(:disabled) {
 
 body.dark-mode .small-stepper-btn.plus {
   background: #1e3a8a;
-  border-color: #1d4ed8;
-  color: #93c5fd;
+  border-color: var(--accent-dark);
+  color: color-mix(in srgb, var(--accent) 60%, white);
 }
 
 body.dark-mode .small-stepper-btn.plus:hover:not(:disabled) {
-  background: #1d4ed8;
-  border-color: #2563eb;
-  color: #dbeafe;
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  color: var(--accent-light);
 }

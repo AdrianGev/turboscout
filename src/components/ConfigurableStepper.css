@@ -37,7 +37,7 @@
 
 .configurable-stepper .stepper-btn.large:hover:not(:disabled) {
   background: #f3f4f6;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   transform: scale(1.05);
 }
 

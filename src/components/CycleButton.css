@@ -32,7 +32,7 @@
 }
 
 .cycle-btn:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   background: #f8fafc;
   transform: scale(1.02);
 }
@@ -53,6 +53,6 @@ body.dark-mode .cycle-btn {
 
 body.dark-mode .cycle-btn:hover {
   background: #334155;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   color: #f1f5f9;
 }

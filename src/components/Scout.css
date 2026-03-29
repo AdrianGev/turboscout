@@ -88,7 +88,7 @@
 }
 
 .stepper-btn:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   background: #f8fafc;
   transform: scale(1.1);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -112,12 +112,12 @@
 }
 
 .btn.primary {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 
 .btn.primary:hover {
-  background: #2563eb;
+  background: var(--accent-dark);
   transform: translateY(-1px);
 }
 
@@ -129,7 +129,7 @@
 
 .btn.secondary:hover {
   background: #f3f4f6;
-  border-color: #3b82f6;
+  border-color: var(--accent);
 }
 
 .section-grid {
@@ -215,7 +215,7 @@
 }
 
 .game-mode-tab.active {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 
@@ -305,9 +305,9 @@
   justify-content: center;
   width: 100%;
   padding: 20px 32px;
-  background: #3b82f6;
+  background: var(--accent);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 .total-score-text {
@@ -395,7 +395,7 @@
 }
 
 .shift-tab.active {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 
@@ -498,7 +498,7 @@
 
 .transition-textarea:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--accent);
 }
 
 .endgame-section {
@@ -574,8 +574,8 @@
 }
 
 .endgame-toggle-btn.selected {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
 }
 
@@ -603,7 +603,7 @@
 }
 
 .endgame-stepper-btn:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   background: #f8fafc;
   transform: scale(1.1);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -615,7 +615,7 @@
 }
 
 .endgame-stepper-btn.selected {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   color: white;
 }
 
@@ -717,7 +717,17 @@
 }
 
 .qr-mode-btn.active {
-  background: #3b82f6;
+  background: var(--accent);
+  color: white;
+}
+
+.qr-mode-btn.stash-save-btn.saved {
+  background: #059669;
+  color: white;
+}
+
+.qr-mode-btn.stash-save-btn.already-saved {
+  background: #dc2626;
   color: white;
 }
 
@@ -1253,8 +1263,8 @@
 
 .match-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .transition-keywords-grid {
@@ -1283,8 +1293,8 @@
 }
 
 .transition-keyword-btn.selected {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
 }
 
@@ -1325,7 +1335,7 @@ body.dark-mode .match-input {
 
 body.dark-mode .input-group input:focus,
 body.dark-mode .match-input:focus {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   background: #475569;
 }
 
@@ -1340,7 +1350,7 @@ body.dark-mode .score-text {
 }
 
 body.dark-mode .total-score-display {
-  background: #3b82f6;
+  background: var(--accent);
 }
 
 body.dark-mode .total-score-text {
@@ -1348,12 +1358,12 @@ body.dark-mode .total-score-text {
 }
 
 body.dark-mode .btn.primary {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 
 body.dark-mode .btn.primary:hover {
-  background: #2563eb;
+  background: var(--accent-dark);
 }
 
 body.dark-mode .btn.secondary {
@@ -1364,7 +1374,7 @@ body.dark-mode .btn.secondary {
 
 body.dark-mode .btn.secondary:hover {
   background: #334155;
-  border-color: #3b82f6;
+  border-color: var(--accent);
 }
 
 body.dark-mode .game-mode-tab {
@@ -1378,7 +1388,7 @@ body.dark-mode .game-mode-tab:hover {
 }
 
 body.dark-mode .game-mode-tab.active {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 
@@ -1393,7 +1403,7 @@ body.dark-mode .shift-tab:hover {
 }
 
 body.dark-mode .shift-tab.active {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 
@@ -1429,7 +1439,7 @@ body.dark-mode .transition-textarea {
 }
 
 body.dark-mode .transition-textarea:focus {
-  border-color: #3b82f6;
+  border-color: var(--accent);
 }
 
 body.dark-mode .transition-keyword-btn {
@@ -1439,14 +1449,14 @@ body.dark-mode .transition-keyword-btn {
 }
 
 body.dark-mode .transition-keyword-btn:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   background: #334155;
   color: #f1f5f9;
 }
 
 body.dark-mode .transition-keyword-btn.selected {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
 }
 
@@ -1496,7 +1506,7 @@ body.dark-mode .qr-mode-btn:hover {
 }
 
 body.dark-mode .qr-mode-btn.active {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
 }
 
@@ -1511,7 +1521,7 @@ body.dark-mode .stepper-btn {
 }
 
 body.dark-mode .stepper-btn:hover {
-  border-color: #3b82f6;
+  border-color: var(--accent);
   background: #334155;
   color: #f1f5f9;
 }
@@ -1529,13 +1539,13 @@ body.dark-mode .endgame-toggle-btn {
 
 body.dark-mode .endgame-toggle-btn:hover {
   background: #334155;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   color: #f1f5f9;
 }
 
 body.dark-mode .endgame-toggle-btn.selected {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
 }
 
@@ -1561,7 +1571,7 @@ body.dark-mode .big-stepper-btn.increment {
 
 body.dark-mode .big-stepper-btn.increment:hover {
   background: #334155;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   color: #f1f5f9;
 }
 

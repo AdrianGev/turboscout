@@ -12,6 +12,8 @@ const Scout = () => {
   const [qrCodeDataURL, setQrCodeDataURL] = useState('');
   const [qrCodeMode, setQrCodeMode] = useState('data');
   const [showClearModal, setShowClearModal] = useState(false);
+  const [stashSaved, setStashSaved] = useState(false);
+  const [stashAlreadySaved, setStashAlreadySaved] = useState(false);
   const [formData, setFormData] = useState({
     initials: '',
     match: 1,
@@ -280,6 +282,31 @@ const Scout = () => {
     }
   };
 
+  const handleSaveToStash = () => {
+    const existing = JSON.parse(localStorage.getItem('turboscout-stash') || '[]');
+    const isDuplicate = existing.some(e =>
+      e.team === formData.team &&
+      e.matchNumber === formData.match &&
+      e.position === (formData.position || '')
+    );
+    if (isDuplicate) {
+      setStashSaved(false);
+      setStashAlreadySaved(true);
+      return;
+    }
+    const entry = {
+      id: Date.now(),
+      team: formData.team,
+      position: formData.position || '',
+      matchNumber: formData.match,
+      totalScore: getTotalScore(),
+      tsvRow: buildTSV(formData),
+      timestamp: Date.now()
+    };
+    localStorage.setItem('turboscout-stash', JSON.stringify([...existing, entry]));
+    setStashSaved(true);
+  };
+
   const handleClear = () => {
     setShowClearModal(true);
   };
@@ -405,7 +432,7 @@ const Scout = () => {
                 value={formData.auto.fuel}
                 onChange={(value) => handleNestedChange('auto', 'fuel', value)}
                 min={0}
-                max={99}
+                max={1000}
                 increment={formData.increment}
               />
             </div>
@@ -481,7 +508,7 @@ const Scout = () => {
                       value={currentShift.fuel}
                       onChange={(value) => handleShiftChange(activeShift, 'fuel', value)}
                       min={0}
-                      max={99}
+                      max={1000}
                       increment={formData.increment}
                     />
                   )}
@@ -554,7 +581,7 @@ const Scout = () => {
                 value={formData.endgame.fuel}
                 onChange={(value) => handleNestedChange('endgame', 'fuel', value)}
                 min={0}
-                max={99}
+                max={1000}
                 increment={formData.increment}
               />
             </div>
@@ -630,27 +657,33 @@ const Scout = () => {
       </div>
 
       {showQRModal && (
-        <div className="qr-modal-overlay" onClick={() => setShowQRModal(false)}>
+        <div className="qr-modal-overlay" onClick={() => { setShowQRModal(false); setStashSaved(false); setStashAlreadySaved(false); }}>
           <div className="qr-modal" onClick={(e) => e.stopPropagation()}>
             <div className="qr-modal-header">
               <h2>Scout Data QR Code</h2>
-              <button className="qr-modal-close" onClick={() => setShowQRModal(false)}>
+              <button className="qr-modal-close" onClick={() => { setShowQRModal(false); setStashSaved(false); setStashAlreadySaved(false); }}>
                 ×
               </button>
             </div>
             <div className="qr-modal-content">
               <div className="qr-mode-toggle">
-                <button 
+                <button
                   className={`qr-mode-btn ${qrCodeMode === 'data' ? 'active' : ''}`}
                   onClick={handleQRModeToggle}
                 >
                   Data
                 </button>
-                <button 
+                <button
                   className={`qr-mode-btn ${qrCodeMode === 'titles' ? 'active' : ''}`}
                   onClick={handleQRModeToggle}
                 >
                   Title Names
+                </button>
+                <button
+                  className={`qr-mode-btn stash-save-btn ${stashSaved ? 'saved' : stashAlreadySaved ? 'already-saved' : ''}`}
+                  onClick={handleSaveToStash}
+                >
+                  {stashSaved ? 'Saved!' : stashAlreadySaved ? 'Already Saved!' : 'Save Data'}
                 </button>
               </div>
               <img src={qrCodeDataURL} alt="Scout Data QR Code" className="qr-code-image" />

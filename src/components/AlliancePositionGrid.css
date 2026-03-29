@@ -50,13 +50,13 @@
 
 .position-btn:hover {
   background: #f3f4f6;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   transform: scale(1.05);
 }
 
 .position-btn.selected {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
   transform: scale(1.1);
 }
@@ -115,13 +115,13 @@ body.dark-mode .position-btn {
 
 body.dark-mode .position-btn:hover {
   background: #334155;
-  border-color: #3b82f6;
+  border-color: var(--accent);
   color: #f1f5f9;
 }
 
 body.dark-mode .position-btn.selected {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
 }
 
