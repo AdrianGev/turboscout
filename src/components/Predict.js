@@ -78,10 +78,11 @@ const Predict = () => {
     const teamData = {};
     rows.forEach((row, index) => {
       const team = row['Team'];
-      const totalScore = parseFloat(row['Total Score'] || row['total_score'] || row['Total_Score'] || 0);
       const autoScore = parseFloat(row['Auto Pts'] || row['auto_pts'] || row['Auto_Pts'] || 0);
       const teleScore = parseFloat(row['Teleop Pts'] || row['teleop_pts'] || row['Teleop_Pts'] || 0);
       const endgameScore = parseFloat(row['Endgame Pts'] || row['endgame_pts'] || row['Endgame_Pts'] || 0);
+      const rawTotalScore = parseFloat(row['Total Score'] || row['total_score'] || row['Total_Score']);
+      const totalScore = !isNaN(rawTotalScore) ? rawTotalScore : autoScore + teleScore + endgameScore;
       
       const climbSuccess = (row['Endgame Climb'] || row['endgame_climb'] || '').toLowerCase().includes('success');
       const died = (row['Endgame Died'] || row['endgame_died'] || '').toLowerCase() === 'y';
